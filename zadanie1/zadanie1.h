@@ -5,11 +5,6 @@
 #define MAXY 500
 #define MAXZ 100
 
-
-void test();
-
-void tab1d(int);
-void tab2d(int,int);
 void tab3d(int,int,int);
 
 #endif /* __zadanie1_H */
