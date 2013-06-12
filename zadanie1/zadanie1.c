@@ -8,11 +8,17 @@ Do każdego elementu przypisz iloczyn indeksów. Pamiętaj o zwolnieniu pamięci
 Podaj wzór w jaki sposób kompilator oblicza odwołanie do elementu [x][y][z].
 */
 
+/*
+M[i][j][k] ==>  *(*(*(M+i)+j)+k)
+M[i][j][k] = *(M+(Y*Z*i+Z*j+k))
+*/
+
 int main() {
-	test();
+	//test();
 	//tab1d(20);
 	//tab2d(7,7);
-	tab3d(2,3,4);
+	//tab3d(5,5,5);
+	tab3d(MAXX,MAXY,MAXZ);
 	return(EXIT_SUCCESS);
 }
 
@@ -108,7 +114,23 @@ void tab3d(int x, int y, int z) {
 	}
 	
 	// filling
+	for(ix=0;ix<x;++ix) {
+		for(iy=0;iy<y;++iy) {
+			for(iz=0;iz<z;++iz) {
+				Array[ix][iy][iz] = ix * iy * iz;
+			}
+		}
+	}
+				
 	// print
+	for(ix=0;ix<x;++ix) {
+		for(iy=0;iy<y;++iy) {
+			for(iz=0;iz<z;++iz) {
+				printf("[%3d][%3d][%3d] = %3d ",ix, iy, iz,Array[ix][iy][iz]);
+			}
+		}
+	}
+	printf("\n");
 	// free
 	for(ix=0;ix<x;++ix) {
 		Array[ix] = (int **) malloc(sizeof(int *) * y);
