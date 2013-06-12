@@ -1,4 +1,5 @@
 c_learn
 =======
 
-learning C
+learning C - pointers and other shits
+
