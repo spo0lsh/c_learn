@@ -1,5 +1,5 @@
-#ifndef __zabawa_H
-#define __zabawa_H
+#ifndef __zadanie1_H
+#define __zadanie1_H
 
 #define MAXX 1000
 #define MAXY 500
@@ -12,5 +12,5 @@ void tab1d(int);
 void tab2d(int,int);
 void tab3d(int,int,int);
 
-#endif
+#endif /* __zadanie1_H */
 

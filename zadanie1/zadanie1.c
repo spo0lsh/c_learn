@@ -9,11 +9,10 @@ Podaj wzór w jaki sposób kompilator oblicza odwołanie do elementu [x][y][z].
 */
 
 int main() {
-	int x,y,z;
 	test();
-	tab1d(150);
-	//tab2d(x,y);
-	//tab3d(x,y,z);
+	//tab1d(20);
+	//tab2d(7,7);
+	tab3d(2,3,4);
 	return(EXIT_SUCCESS);
 }
 
@@ -51,25 +50,75 @@ void tab1d(int x) {
 }
 
 void tab2d(int x, int y) {
-	for(x=0;x<10;++x) {
-		for(y=0;y<10;++y) {
-			printf("%d x %d ", x+1,y+1);
-			if((y+1) % 10 == 0)
+	// create
+	int ix;
+	int iy;
+	int **Array = (int **) malloc(sizeof(int *) * x);
+	if(Array == NULL)
+		exit(EXIT_FAILURE);
+	for(ix=0;ix<x;++ix) {
+		Array[ix] = (int*) malloc(sizeof(int) * y);
+		if(Array[ix] == NULL) {
+			for(ix=0;ix<x;++ix) {
+				free(Array[ix]);
+				Array[ix]=NULL;
+			}
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	// filling
+	for(ix=0;ix<x;++ix) {
+		for(iy=0;iy<y;++iy) {
+			Array[ix][iy] = ix * iy;
+		}
+	}
+
+	// print
+	for(ix=0;ix<x;++ix) {
+		for(iy=0;iy<y;++iy) {
+			printf("%3d x %3d = %3d ", ix, iy, Array[ix][iy]);
+			if((iy+1) % 5 == 0)
 				printf("\n");
 		}
 	}
 	printf("\n");
+	
+	//free
+	for(ix=0;ix<x;++ix) {
+		free(Array[ix]);
+		Array[ix]=NULL;
+	}
+	free((void *) Array);
+	Array=NULL;
 }
 
 void tab3d(int x, int y, int z) {
-	for(x=0;x<10;++x) {
-		for(y=0;y<10;++y) {
-			for(z=0;z<10;++z) {
-				printf("%d x %d x %d ", x+1,y+1,z+1);
-				if((z+1) % 5 == 0)
-					printf("\n");
-			}
+	// create
+	int ix;
+	int iy;
+	int iz;
+	// add clean!
+	int ***Array = (int ***) malloc(sizeof(int **) * x);
+	for(ix=0;ix<x;++ix) {
+		Array[ix] = (int **) malloc(sizeof(int *) * y);
+		for(iy=0;iy<y;++iy) {
+			Array[ix][iy] = (int*) malloc(sizeof(int) * z);
 		}
 	}
-	printf("\n");
+	
+	// filling
+	// print
+	// free
+	for(ix=0;ix<x;++ix) {
+		Array[ix] = (int **) malloc(sizeof(int *) * y);
+		for(iy=0;iy<y;++iy) {
+			free((void *) Array[ix][iy]);
+			Array[ix][iy]=NULL;
+		}
+		free((void *) Array[ix]);
+		Array[ix]=NULL;
+	}
+	free((void *) Array);
+	Array=NULL;
 }
