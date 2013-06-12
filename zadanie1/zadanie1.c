@@ -24,6 +24,11 @@ void tab3d(int x, int y, int z) {
 	int iz;
 	// add clean!
 	int ***Array = (int ***) malloc(sizeof(int **) * x);
+	if(Array == NULL) {
+		free(Array);
+		Array=NULL;
+		exit(EXIT_FAILURE);
+	}
 	for(ix=0;ix<x;++ix) {
 		Array[ix] = (int **) malloc(sizeof(int *) * y);
 		for(iy=0;iy<y;++iy) {
