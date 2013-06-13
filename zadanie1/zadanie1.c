@@ -15,6 +15,7 @@ M[i][j][k] ==>  *(*(*(M+i)+j)+k)
 int main() {
 	tab3d(MAXX,MAXY,MAXZ);
 	return(EXIT_SUCCESS);
+
 }
 
 void tab3d(int x, int y, int z) {
