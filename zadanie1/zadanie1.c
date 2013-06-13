@@ -42,6 +42,19 @@ void tab3d(int x, int y, int z) {
 		}
 		for(iy=0;iy<y;++iy) {
 			Array[ix][iy] = (int*) malloc(sizeof(int) * z);
+			if(Array[ix][iy] == NULL) {
+				for(iy=0;iy<y;++iy) {
+					free(Array[ix][iy]);
+					Array[ix][iy]=NULL;
+				}
+				for(ix=0;ix<x;++ix) {
+					free(Array[ix]);
+					Array[ix]=NULL;
+				}
+				free(Array);
+				Array=NULL;
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
 	
