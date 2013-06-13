@@ -31,6 +31,15 @@ void tab3d(int x, int y, int z) {
 	}
 	for(ix=0;ix<x;++ix) {
 		Array[ix] = (int **) malloc(sizeof(int *) * y);
+		if(Array[ix] == NULL) {
+			for(ix=0;ix<x;++ix) {
+				free(Array[ix]);
+				Array[ix]=NULL;
+			}
+			free(Array);
+			Array=NULL;
+			exit(EXIT_FAILURE);
+		}
 		for(iy=0;iy<y;++iy) {
 			Array[ix][iy] = (int*) malloc(sizeof(int) * z);
 		}
@@ -46,13 +55,13 @@ void tab3d(int x, int y, int z) {
 	}
 				
 	// print
-	for(ix=0;ix<x;++ix) {
+	/*for(ix=0;ix<x;++ix) {
 		for(iy=0;iy<y;++iy) {
 			for(iz=0;iz<z;++iz) {
 				printf("[%3d][%3d][%3d] = %3d ",ix, iy, iz,Array[ix][iy][iz]);
 			}
 		}
-	}
+	} */
 	printf("\n");
 	// free
 	for(ix=0;ix<x;++ix) {
