@@ -22,8 +22,8 @@ void tab3d(int x, int y, int z) {
 	int ix;
 	int iy;
 	int iz;
-	// add clean!
 	int ***Array = (int ***) malloc(sizeof(int **) * x);
+	//something wrong -> clean
 	if(Array == NULL) {
 		free(Array);
 		Array=NULL;
@@ -31,6 +31,7 @@ void tab3d(int x, int y, int z) {
 	}
 	for(ix=0;ix<x;++ix) {
 		Array[ix] = (int **) malloc(sizeof(int *) * y);
+		//something wrong -> clean
 		if(Array[ix] == NULL) {
 			for(ix=0;ix<x;++ix) {
 				free(Array[ix]);
@@ -42,6 +43,7 @@ void tab3d(int x, int y, int z) {
 		}
 		for(iy=0;iy<y;++iy) {
 			Array[ix][iy] = (int*) malloc(sizeof(int) * z);
+			//something wrong -> clean
 			if(Array[ix][iy] == NULL) {
 				for(iy=0;iy<y;++iy) {
 					free(Array[ix][iy]);
