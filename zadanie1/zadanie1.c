@@ -80,7 +80,6 @@ void tab3d(int x, int y, int z) {
 	printf("\n");
 	// free
 	for(ix=0;ix<x;++ix) {
-		Array[ix] = (int **) malloc(sizeof(int *) * y);
 		for(iy=0;iy<y;++iy) {
 			free((void *) Array[ix][iy]);
 			Array[ix][iy]=NULL;
@@ -89,5 +88,5 @@ void tab3d(int x, int y, int z) {
 		Array[ix]=NULL;
 	}
 	free((void *) Array);
-	Array=NULL;
+	Array=NULL; */
 }
