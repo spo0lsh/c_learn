@@ -21,7 +21,7 @@ void tab3d(int x, int y, int z) {
 	// create
 	int ix;
 	int iy;
-	int iz;
+	//int iz;
 	int ***Array = (int ***) malloc(sizeof(int **) * x);
 	//something wrong -> clean
 	if(Array == NULL) {
@@ -61,23 +61,11 @@ void tab3d(int x, int y, int z) {
 	}
 	
 	// filling
-	for(ix=0;ix<x;++ix) {
-		for(iy=0;iy<y;++iy) {
-			for(iz=0;iz<z;++iz) {
-				Array[ix][iy][iz] = ix * iy * iz;
-			}
-		}
-	}
+	tab3d_filling(Array);
 				
 	// print
-	/*for(ix=0;ix<x;++ix) {
-		for(iy=0;iy<y;++iy) {
-			for(iz=0;iz<z;++iz) {
-				printf("[%3d][%3d][%3d] = %3d ",ix, iy, iz,Array[ix][iy][iz]);
-			}
-		}
-	} */
-	printf("\n");
+	tab3d_print(Array);
+
 	// free
 	for(ix=0;ix<x;++ix) {
 		Array[ix] = (int **) malloc(sizeof(int *) * y);
@@ -91,3 +79,31 @@ void tab3d(int x, int y, int z) {
 	free((void *) Array);
 	Array=NULL;
 }
+
+//void tab3d_create(int, int, int);
+void tab3d_filling(int (***Array)) {
+	int ix;
+	int iy;
+	int iz;
+	for(ix=0;ix<MAXX;++ix) {
+		for(iy=0;iy<MAXY;++iy) {
+			for(iz=0;iz<MAXZ;++iz) {
+				Array[ix][iy][iz] = ix * iy * iz;
+			}
+		}
+	}
+}
+void tab3d_print(int (***Array)) {
+	int ix;
+	int iy;
+	int iz;
+	for(ix=0;ix<MAXX;++ix) {
+		for(iy=0;iy<MAXY;++iy) {
+			for(iz=0;iz<MAXZ;++iz) {
+				printf("[%3d][%3d][%3d] = %3d ",ix, iy, iz,Array[ix][iy][iz]);
+			}
+		}
+	}
+	printf("\n");
+}
+//void tab3d_free(int,int);
