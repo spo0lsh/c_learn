@@ -5,7 +5,7 @@ CFLAGS=-g -Wall
 LFLAGS=
 LIBS=
 SRCS = $(wildcard *.c)
-PROGS = zadanie1 #$(patsubst %.c,%,$(SRCS))
+PROGS = zadanie2 #$(patsubst %.c,%,$(SRCS))
 OBJS = $(patsubst %.c,%.o,$(SRCS))
 
 all: objs progs

@@ -14,3 +14,39 @@ Funkcję, która wywołuję funkcję z tablicy na podstawie otrzymanego parametr
 Pod uwagę będą brane zabezpieczenia przed wykroczeniem poza tablicę oraz usuwanie 
  zadeklarowanej pamięci.
 */
+
+int main() {
+	fun_ptr *Array;
+	Array = malloc(sizeof(fun_ptr)*5);
+	
+	init(Array);
+
+	call(Array,1);
+	add(Array,1, &example);
+	call(Array,1);
+	return(EXIT_SUCCESS);
+}
+
+fun_ptr create() {
+	//fun_ptr &Array = (fun_ptr *) malloc(sizeof(fun_ptr) * 5);
+	//return(Array);
+	return(NULL);
+}
+void init(fun_ptr *Array) {
+	int i;
+	for (i=0; i < 5; i++){
+		Array[i] = error;
+	}
+}
+void add(fun_ptr *Array, int i, void *fun) {
+	Array[i] = fun;
+}
+void call(fun_ptr *Array,int i){
+	Array[i]();
+}
+void error() {
+	printf("Something wrong!\n");
+}
+void example() {
+	printf("Pointer?\n");
+}
