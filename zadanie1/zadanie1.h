@@ -6,9 +6,9 @@
 #define MAXZ 100
 
 void tab3d(int,int,int);
-void tab3d_create(int, int, int);
+int ***tab3d_create();
 void tab3d_filling(int (***));
 void tab3d_print(int (***));
-void tab3d_free(int,int);
+void tab3d_free(int (***));
 
 #endif /* __zadanie1_H */
