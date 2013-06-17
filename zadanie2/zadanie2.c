@@ -17,20 +17,19 @@ Pod uwagę będą brane zabezpieczenia przed wykroczeniem poza tablicę oraz usu
 
 int main() {
 	fun_ptr *Array;
-	Array = malloc(sizeof(fun_ptr)*5);
-	
-	init(Array);
+	Array=create();
 
+	init(Array);
 	call(Array,1);
 	add(Array,1, &example);
 	call(Array,1);
 	return(EXIT_SUCCESS);
 }
 
-fun_ptr create() {
-	//fun_ptr &Array = (fun_ptr *) malloc(sizeof(fun_ptr) * 5);
-	//return(Array);
-	return(NULL);
+fun_ptr *create() {
+	fun_ptr *Array;
+	Array = malloc(sizeof(fun_ptr)*5);
+	return(Array);
 }
 void init(fun_ptr *Array) {
 	int i;
