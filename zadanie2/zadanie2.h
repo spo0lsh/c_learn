@@ -7,7 +7,7 @@ typedef enum duap_t {
 	HANDLE2,
 	HANDLE3,
 	SIZE,
-	HANDLE4
+	HANDLE4 // for test
 } duap_s;
 
 fun_ptr *create(); // po co mnie to?

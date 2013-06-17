@@ -3,7 +3,10 @@
 
 // kombinacje (enum)
 typedef enum comb_e {
-	COMB1, COMB2, COMB3
+	COMB1, 
+	COMB2, 
+	COMB3,
+	COMB4 // for test
 }comb_t;
 // kolejność
 typedef struct order_s {

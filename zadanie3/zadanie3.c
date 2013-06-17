@@ -31,6 +31,8 @@ int main() {
 	buff_print(buff);
 	buff_add(COMB3, buff);
 	buff_print(buff);
+	buff_add(COMB4, buff);
+	buff_print(buff);
 	// printowanie
 	
 	// zwalnianie buffora
@@ -85,7 +87,7 @@ void buff_add(comb_t comb, char * buff) {
 			memcpy(buff + (sizeof(tmp_seq) + sizeof(msg3_t) + sizeof(msg1_t)), &m2, sizeof(msg2_t));
 		break;
 		default:
-			printf("Combination N/A");
+			printf("Combination N/A\n");
 		break;
 	}
 }
