@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h> // http://pl.wikibooks.org/wiki/C/memcpy
 #include "zadanie3.h"
 
 /*
@@ -19,16 +20,23 @@ Funkcję, która odczytuje wszystkie wiadomości z buforu w kolejności
 
 int main() {
 	// definicja buffora
-	char * buff = malloc(sizeof(msg1_t) +  sizeof(msg2_t) + sizeof(msg3_t));
+	char * buff = malloc(sizeof(order_t) + sizeof(msg1_t) +  sizeof(msg2_t) + sizeof(msg3_t));
 	if(buff == NULL) {
 		printf("Something wrong!\n");
 		free(buff);
 		buff=NULL;
 		exit(EXIT_FAILURE);
 	}
-	
-	// debug
-	//test_size();
+
+	buff_add(COMB1, buff);
+	buff_print(buff);
+	buff_add(COMB2, buff);
+	buff_print(buff);
+	buff_add(COMB1, buff);
+	buff_print(buff);
+	buff_add(COMB3, buff);
+	buff_print(buff);
+	// printowanie
 	
 	// zwalnianie buffora
 	free(buff);
@@ -36,15 +44,95 @@ int main() {
 	return(EXIT_SUCCESS);
 }
 
+void buff_add(comb_t comb, char * buff) {
+	order_t tmp_seq;
+	msg1_t m1;
+	msg2_t m2;
+	msg3_t m3;
+	// ustawianie wiadomosci
+	m1.m1 = 11;
+	m1.m2 = 12;
+	m1.m3 = 13;
+	m2.m1 = 21;
+	m2.m2 = 22;
+	m2.m3 = 23;
+	m3.m1 = 31;
+	m3.m2 = 32;
+	m3.m3 = 33;
+	switch (comb) {
+		case COMB1:
+			tmp_seq.one = sizeof(msg1_t);
+			tmp_seq.two = sizeof(msg2_t);
+			tmp_seq.three = sizeof(msg3_t);
+			tmp_seq.comb = comb;
+			memcpy(buff, &tmp_seq, sizeof(order_t));
+			memcpy(buff + sizeof(tmp_seq), &m1, sizeof(msg1_t));
+			memcpy(buff + (sizeof(tmp_seq) + sizeof(msg1_t)), &m2, sizeof(msg2_t));
+			memcpy(buff + (sizeof(tmp_seq) + sizeof(msg1_t) + sizeof(msg2_t)), &m3, sizeof(msg3_t));
+			break;
+		case COMB2:
+			tmp_seq.one = sizeof(msg2_t);
+			tmp_seq.two = sizeof(msg3_t);
+			tmp_seq.three = sizeof(msg1_t);
+			tmp_seq.comb = comb;
+			memcpy(buff, &tmp_seq, sizeof(order_t));
+			memcpy(buff + sizeof(tmp_seq), &m2, sizeof(msg2_t));
+			memcpy(buff + (sizeof(tmp_seq) + sizeof(msg2_t)), &m3, sizeof(msg3_t));
+			memcpy(buff + (sizeof(tmp_seq) + sizeof(msg2_t) + sizeof(msg3_t)), &m1, sizeof(msg1_t));
+		break;
+		case COMB3:
+			tmp_seq.one = sizeof(msg3_t);
+			tmp_seq.two = sizeof(msg1_t);
+			tmp_seq.three = sizeof(msg2_t);
+			tmp_seq.comb = comb;
+			memcpy(buff, &tmp_seq, sizeof(order_t));
+			memcpy(buff + sizeof(tmp_seq), &m3, sizeof(msg3_t));
+			memcpy(buff + (sizeof(tmp_seq) + sizeof(msg3_t)), &m1, sizeof(msg1_t));
+			memcpy(buff + (sizeof(tmp_seq) + sizeof(msg3_t) + sizeof(msg1_t)), &m2, sizeof(msg2_t));
+		break;
+		default:
+			printf("Combination N/A");
+		break;
+	}
+}
 
-void test_size() {
-	printf("int %d\n", sizeof(int));
-	printf("short int %d\n", sizeof(short int));
-	printf("char %d\n", sizeof(char));
-	printf("long int %d\n", sizeof(long int));
-	printf("float %d\n", sizeof(float));
-	printf("double %d\n", sizeof(double));
-	printf("msg1_t %d\n", sizeof(msg1_t));
-	printf("msg2_t %d\n", sizeof(msg2_t));
-	printf("msg3_t %d\n", sizeof(msg3_t));
+void buff_print(char * buff) {
+	order_t seq;
+	msg_t msg;
+
+	switch (seq.comb) {
+		case COMB1:
+			printf("COMB1: ");
+			memcpy(&msg.um1, buff + sizeof(seq), sizeof(msg1_t));
+			printf("%d, %d, %d ", msg.um1.m1, msg.um1.m2, msg.um1.m3);
+			memcpy(&msg.um2, buff + (sizeof(seq) + sizeof(msg1_t)), sizeof(msg2_t));
+			printf("%.2f, %.2f, %.2f ", msg.um2.m1, msg.um2.m2, msg.um2.m3);
+			memcpy(&msg.um3,buff + (sizeof(seq) + sizeof(msg1_t) + sizeof(msg2_t)), sizeof(msg3_t));
+			printf("%.2f, %.2f, %.2f ", msg.um3.m1, msg.um3.m2, msg.um3.m3);
+			printf("\n");
+		break;
+		case COMB2:
+			printf("COMB2: ");
+			memcpy(&msg.um1, buff + sizeof(seq), sizeof(msg2_t));
+			printf("%.2f, %.2f, %.2f ", msg.um2.m1, msg.um2.m2, msg.um2.m3);
+			memcpy(&msg.um2, buff + (sizeof(seq) + sizeof(msg2_t)), sizeof(msg3_t));
+			printf("%.2f, %.2f, %.2f ", msg.um3.m1, msg.um3.m2, msg.um3.m3);
+			memcpy(&msg.um3,buff + (sizeof(seq) + sizeof(msg2_t) + sizeof(msg3_t)), sizeof(msg1_t));
+			printf("%d, %d, %d ", msg.um1.m1, msg.um1.m2, msg.um1.m3);
+			printf("\n");
+		break;
+		case COMB3:
+			printf("COMB3: ");
+			memcpy(&msg.um3, buff + sizeof(seq), sizeof(msg3_t));
+			printf("%.2f, %.2f, %.2f ", msg.um3.m1, msg.um3.m2, msg.um3.m3);
+			memcpy(&msg.um1, buff + (sizeof(seq) + sizeof(msg3_t)), sizeof(msg1_t));
+			printf("%d, %d, %d ", msg.um1.m1, msg.um1.m2, msg.um1.m3);
+			memcpy(&msg.um2,buff + (sizeof(seq) + sizeof(msg3_t) + sizeof(msg1_t)), sizeof(msg2_t));
+			printf("%.2f, %.2f, %.2f ", msg.um2.m1, msg.um2.m2, msg.um2.m3);
+			printf("\n");
+		break;
+		default:
+			printf("Combination N/A");
+		break;
+	}
 }
