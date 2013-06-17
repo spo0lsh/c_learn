@@ -38,6 +38,7 @@ typedef union {
 
 void buff_add(comb_t, char *); // wrzucanie do buffor
 void buff_print(char *); // czytanie z buffora
-
+char *buff_create(); // tworzymy buffor
+void buff_free(char (*)); // usuwamy
 
 #endif /* __zadanie3_H */

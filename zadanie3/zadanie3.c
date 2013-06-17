@@ -20,14 +20,9 @@ Funkcję, która odczytuje wszystkie wiadomości z buforu w kolejności
 
 int main() {
 	// definicja buffora
-	char * buff = malloc(sizeof(order_t) + sizeof(msg1_t) +  sizeof(msg2_t) + sizeof(msg3_t));
-	if(buff == NULL) {
-		printf("Something wrong!\n");
-		free(buff);
-		buff=NULL;
-		exit(EXIT_FAILURE);
-	}
-
+	char *buff;
+	buff=buff_create();
+	// jedziemy z koksem
 	buff_add(COMB1, buff);
 	buff_print(buff);
 	buff_add(COMB2, buff);
@@ -39,8 +34,7 @@ int main() {
 	// printowanie
 	
 	// zwalnianie buffora
-	free(buff);
-	buff=NULL;
+	buff_free(buff);
 	return(EXIT_SUCCESS);
 }
 
@@ -135,4 +129,19 @@ void buff_print(char * buff) {
 			printf("Combination N/A");
 		break;
 	}
+}
+
+char *buff_create() {
+	char * buff = malloc(sizeof(order_t) + sizeof(msg1_t) +  sizeof(msg2_t) + sizeof(msg3_t));
+	if(buff == NULL) {
+		printf("Something wrong!\n");
+		free(buff);
+		buff=NULL;
+		exit(EXIT_FAILURE);
+	}
+	return(buff);
+}
+void buff_free(char (*buff)) {
+	free(buff);
+	buff=NULL;
 }
