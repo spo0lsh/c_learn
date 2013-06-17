@@ -6,14 +6,17 @@ typedef enum duap_t {
 	HANDLE1,
 	HANDLE2,
 	HANDLE3,
-	SIZE
+	SIZE,
+	HANDLE4
 } duap_s;
 
 fun_ptr *create(); // po co mnie to?
+void delete(fun_ptr *); // remove
 void init(fun_ptr *); // dodanie do tablicy error()
-void add(fun_ptr *, int , void *); // dodanie funkcji
-void call(fun_ptr *,int ); // wywołanie funkcji
+void add(fun_ptr *, duap_s , void *); // dodanie funkcji
+void call(fun_ptr *Array, duap_s ); // wywołanie funkcji
 void error(); // info o błędach
+void error_v(); // info o błędach bardzo poważnych
 void example(); // przykładowa funkcja
 
 #endif /* __zadanie2_H */

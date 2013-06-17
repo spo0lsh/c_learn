@@ -20,31 +20,49 @@ int main() {
 	Array=create();
 
 	init(Array);
-	call(Array,1);
-	add(Array,1, &example);
-	call(Array,1);
+	call(Array,HANDLE1);
+	call(Array,HANDLE4);
+	add(Array,HANDLE1, &example);
+	add(Array,HANDLE4, &example);
+	call(Array,HANDLE1);
+	delete(Array);
 	return(EXIT_SUCCESS);
 }
 
 fun_ptr *create() {
 	fun_ptr *Array;
-	Array = malloc(sizeof(fun_ptr)*5);
+	Array = malloc(sizeof(fun_ptr)*SIZE);
 	return(Array);
+}
+void delete(fun_ptr * Array) {
+	free((void *) Array);
+	Array=NULL;
 }
 void init(fun_ptr *Array) {
 	int i;
-	for (i=0; i < 5; i++){
+	for (i=0; i < SIZE; i++){
 		Array[i] = error;
 	}
 }
-void add(fun_ptr *Array, int i, void *fun) {
-	Array[i] = fun;
+void add(fun_ptr *Array, duap_s i, void *fun) {
+	if(i < SIZE) {
+		Array[i] = fun;
+	} else {
+		error_v();
+	}
 }
-void call(fun_ptr *Array,int i){
-	Array[i]();
+void call(fun_ptr *Array,duap_s i) {
+	if(i < SIZE) {
+		Array[i]();
+	} else {
+		error_v();
+	}
 }
 void error() {
 	printf("Something wrong!\n");
+}
+void error_v() {
+	printf("Something very wrong!\n");
 }
 void example() {
 	printf("Pointer?\n");
