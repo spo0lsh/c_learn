@@ -35,8 +35,8 @@ int main() {
 	int msgflg = IPC_CREAT | 0666;
 	key_t key;
 	message_buf sbuf;
-	//key = 1234;
-	key = ftok("/tmp/bridge0", 'b');
+	key = 1001;
+	//key = ftok("/tmp/bridge0", 'b');
 	
 	//(void) fprintf(stderr, "\nmsgget: Calling msgget(%#lx,\%#o)\n",key, msgflg);
     if ((msqid = msgget(key, msgflg )) < 0) {

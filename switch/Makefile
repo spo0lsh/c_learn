@@ -14,7 +14,7 @@ SRCS_RECV = gen_recv.c #$(wildcard *.c)
 PROGS_RECV = gen_recv #$(patsubst %.c,%,$(SRCS_RECV))
 OBJS_RECV = $(patsubst %.c,%.o,$(SRCS_RECV))
 
-all: objs_send progs_send objs_recv progs_recv
+all: objs_switch progs_switch objs_send progs_send objs_recv progs_recv 
 
 objs_switch: $(OBJS_SWITCH)
 %.o : %.c
