@@ -34,7 +34,7 @@ main()
         exit(1);
     }
 
-    
+    while(1) {
     /*
      * Receive an answer of message type 1.
      */
@@ -47,5 +47,6 @@ main()
      * Print the answer.
      */
     printf("%s\n", rbuf.mtext);
+	}
     exit(0);
 }
