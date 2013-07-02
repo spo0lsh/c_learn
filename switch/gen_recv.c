@@ -8,7 +8,12 @@
 #include <memory.h>
 //#define DEBUG
 
-int main() {
+int main(int argc, char *argv[]){
+	
+	if(argc < 2) {
+		printf("%s <numer_of_bridgeport>\n", argv[0]);
+		exit(1);
+	}
 	int msqid;
     key_t key;
     message_buf  rbuf;
@@ -19,8 +24,8 @@ int main() {
      * "name" 1234, which was created by
      * the server.
      */
-    //key = 1234;
-    key = ftok("/tmp/bridge0", 'b');
+    key = 1100 + atoi(argv[1]);
+    //key = ftok("/tmp/bridge0", 'b');
 	
     if ((msqid = msgget(key, 0666)) < 0) {
         perror("msgget");

@@ -6,6 +6,6 @@ typedef struct msgbuf {
 	SFrame frame;
 } message_buf;
 
-
+void fn_recv(int i,SFrame *frame);
 
 #endif /* __recv_H */

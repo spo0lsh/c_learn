@@ -8,8 +8,12 @@
 #include <memory.h>
 //#define DEBUG
 
-int main() {
+int main(int argc, char *argv[]){
 	
+	if(argc < 2) {
+		printf("%s <numer_of_bridgeport>\n", argv[0]);
+		exit(1);
+	}
 	//tworzenie
 	SFrame frame;
 	frame.ach_MACdst[0] = 0x00;
@@ -26,7 +30,7 @@ int main() {
 	frame.ach_MACsrc[4] = 0xff;
 	frame.ach_MACsrc[5] = 0xff;
 
-	frame.ach_Length = 64;
+	frame.ach_Length = 666;
 	(void) strcpy(frame.ach_Payload,"DUAP");
 	(void) strcpy(frame.ach_crc,"42");
 	
@@ -35,7 +39,7 @@ int main() {
 	int msgflg = IPC_CREAT | 0666;
 	key_t key;
 	message_buf sbuf;
-	key = 1001;
+	key = 1000 + atoi(argv[1]);
 	//key = ftok("/tmp/bridge0", 'b');
 	
 	//(void) fprintf(stderr, "\nmsgget: Calling msgget(%#lx,\%#o)\n",key, msgflg);
