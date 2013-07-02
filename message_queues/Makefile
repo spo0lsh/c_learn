@@ -1,7 +1,7 @@
 #Napisac Makefile do przykladów z wykorzystaniem flag i dopasowania wzorców
 
 CC=gcc
-CFLAGS=-g -Wall
+CFLAGS=-g -Wall -lrt
 LFLAGS=
 LIBS=
 SRCS = $(wildcard *.c)
