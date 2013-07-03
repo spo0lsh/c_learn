@@ -29,7 +29,7 @@ void fn_recv(int i,SFrame *frame) {
         exit(1);
     }
 	//frame = rbuf.frame;
-	memcpy((void *)frame, (void *) &rbuf.frame, sizeof(message_buf));
+	memcpy((void *)frame, (void *) &rbuf.frame, sizeof(SFrame));
 	
 	#ifdef DEBUG
     /*

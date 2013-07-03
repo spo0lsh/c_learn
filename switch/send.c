@@ -11,9 +11,9 @@
 
 void fn_send(int i, SFrame *frame) {
 
-	SFrame frame1;
-	memcpy(&frame1, frame, sizeof(message_buf));
-	printf("[S2] Length: %d\n", frame->ach_Length);
+	//SFrame frame1;
+	//memcpy(&frame1, frame, sizeof(message_buf));
+	//printf("[S2] Length: %d\n", frame->ach_Length);
 	
 	// 
 	int msqid;
@@ -21,7 +21,6 @@ void fn_send(int i, SFrame *frame) {
 	key_t key;
 	message_buf sbuf;
 	key = 1100 + i;
-	//key = ftok("/tmp/bridge0", 'b');
 	
 	//(void) fprintf(stderr, "\nmsgget: Calling msgget(%#lx,\%#o)\n",key, msgflg);
     if ((msqid = msgget(key, msgflg )) < 0) {
@@ -29,13 +28,14 @@ void fn_send(int i, SFrame *frame) {
         exit(1);
     }
     else 
+    {
 		(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
-	
+	}
 	sbuf.mtype = 1;
 	(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
-	sbuf.frame = frame1;
-	//memcpy(&sbuf.frame, frame, sizeof(message_buf));
-	//memcpy((void *)sbuf.frame, (void *) &frame, sizeof(message_buf));
+	//sbuf.frame = frame1;
+	//memcpy((void *)&(sbuf.frame), (void *) frame, sizeof(message_buf));
+	memcpy(&(sbuf.frame), frame, sizeof(SFrame));
 	printf("frame1 Length: %d\n", sbuf.frame.ach_Length);
 	(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
 	
@@ -46,41 +46,3 @@ void fn_send(int i, SFrame *frame) {
 	} else 
 		printf("Message: Sent\n");
 }
-
-
-
-
-	/*
-	int msqid;
-	int msgflg = IPC_CREAT | 0666;
-	key_t key;
-	message_buf sbuf;
-	//key = 1100 + i;
-	key = 1234;
-	
-	
-	printf("%d %d\n", key,i );
-
-    if ((msqid = msgget(key, msgflg )) < 0) {
-        perror("msgget");
-        exit(1);
-    }
-    else 
-		(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
-	
-	sbuf.mtype = 1;
-	(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
-	memcpy((void *) &sbuf.frame, (void *) frame, sizeof(message_buf));
-	printf("duap= %d\n", sbuf.frame.ach_Length);
-	printf("Frame Length: %d\n", sbuf.frame.ach_Length);
-	(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
-	printf("sizeof: %d\n", sizeof(sbuf.frame));
-	//if (msgsnd(msqid, &sbuf, sizeof(sbuf.frame), IPC_NOWAIT) < 0) {
-	if (msgsnd(msqid, &sbuf, sizeof(sbuf.frame), IPC_NOWAIT) < 0) {
-		//printf("%d %"l %l \n", msqid, sbuf.mtype, sizeof(sbuf.frame) );
-		perror("msgsnd");
-		exit(1);
-	} else 
-		printf("Message: Sent\n");
-	*/
-	
