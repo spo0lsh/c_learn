@@ -4,11 +4,12 @@
 #include "recv.h"
 #include "flood.h"
 #include "send.h"
+#include "aging.h"
 #include <pthread.h>
 #include <unistd.h>
 #include <memory.h>
 
-#define SWITCH 10
+
 
 //void *fn_pthread_recv(void *arg);
 
@@ -16,22 +17,40 @@
 
 int main() {
 	/* thread variables */
-	pthread_t pthread_recv[SWITCH];
+	//pthread_t pthread_recv[SWITCH];
+	//pthread_t pthread_send[SWITCH];
+	pthread_t pthread_bridgeport[SWITCH];
+	pthread_t pthread_aging;
 	int vals[SWITCH];
 	int i;
-	//pthread_t pthread_send;
-	
 	/* structs to be passed to threads */
 	//SFrame pth_rcv;
 	//SFrame pth_snd;
 	
-	/* create thread pthread_recv */  
+	/* create threads */  
 	for(i=0;i<SWITCH;++i) {
 		vals[i] = i + 1;
-		if ( pthread_create( &pthread_recv[i], NULL, (void *) &fn_pthread_recv, (void *) &vals[i]) ) {
+		/*if ( pthread_create( &pthread_recv[i], NULL, (void *) &fn_pthread_recv, (void *) &vals[i]) ) {
+			#ifdef DEBUG
 			printf("blad przy tworzeniu watku\n"); abort();
+			#endif
 		}
-	}	
+		if ( pthread_create( &pthread_send[i], NULL, (void *) &fn_pthread_send, (void *) &vals[i]) ) {
+			#ifdef DEBUG
+			printf("blad przy tworzeniu watku\n"); abort();
+			#endif
+		}*/
+		if ( pthread_create( &pthread_bridgeport[i], NULL, (void *) &fn_pthread_bridgeport, (void *) &vals[i]) ) {
+			#ifdef DEBUG
+			printf("blad przy tworzeniu watku\n"); abort();
+			#endif
+		}
+	}
+	if ( pthread_create( &pthread_aging, NULL, (void *) &fn_pthread_aging, NULL) ) {
+		#ifdef DEBUG
+		printf("blad przy tworzeniu watku\n"); abort();
+		#endif
+	}
 	//int bridge;
 	//SFrame frame;
 	/*
@@ -77,12 +96,24 @@ int main() {
 //	pthread_exit(0); /* exit */
 //}
 
+void fn_pthread_bridgeport(void *arg) {
+	int *n_bridge;
+	if(NULL != arg) {
+	    n_bridge = (int *) arg;
+	}
+	#ifdef DEBUG
+	printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
+	#endif
+	pthread_exit(0); /* exit */
+}
 
 void fn_pthread_recv(void *arg) {
 	int *n_bridge;
-	
-	if(NULL != arg)
+	if(NULL != arg) {
 	    n_bridge = (int *) arg;
+	}
+	//SFrame frame;
+	//fn_recv(*n_bridge,&frame);
 	//memcpy((void *) &n_bridge, (void *) arg, sizeof(int));
 	//n_bridge = (n_bridge *) arg;
 	//n_bridge = (n_bridge *) &arg; /* type cast to a pointer to n_bridge */
@@ -92,9 +123,46 @@ void fn_pthread_recv(void *arg) {
 	//int _bridge_rcv;
 	//_bridge_rcv=1;
 	//fn_recv(_bridge_rcv,&pth_rcv);
+	#ifdef DEBUG
 	printf("fn_pthread_recv number %d!\n", *n_bridge);
+	#endif
+	//fn_send(n_bridge,&frame);
 	pthread_exit(0); /* exit */
 }
+
+void fn_pthread_send(void *arg) {
+	int *n_bridge;
+	if(NULL != arg) {
+	    n_bridge = (int *) arg;
+	}
+	//memcpy((void *) &n_bridge, (void *) arg, sizeof(int));
+	//n_bridge = (n_bridge *) arg;
+	//n_bridge = (n_bridge *) &arg; /* type cast to a pointer to n_bridge */
+	//memcpy(&n_bridge, arg,sizeof(int));
+	//SFrame *pth_rcv;
+	//pth_rcv = (SFrame *) arg;  /* type cast to a pointer to thdata */
+	//int _bridge_rcv;
+	//_bridge_rcv=1;
+	//fn_recv(_bridge_rcv,&pth_rcv);
+	#ifdef DEBUG
+	printf("fn_pthread_send number %d!\n", *n_bridge);
+	#endif
+	pthread_exit(0); /* exit */
+}
+
+void fn_pthread_aging(void *arg) {
+	#ifdef DEBUG
+	printf("fn_aging\n");
+	#endif
+	while(1) {
+		#ifdef DEBUG
+		printf("Aging procedure ...\n");
+		#endif
+		sleep(AGING);
+	}
+	pthread_exit(0); /* exit */
+}
+
 
 //void *pthread_send(void *arg) {
 //	SFrame *pth_snd;

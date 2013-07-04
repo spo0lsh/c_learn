@@ -13,7 +13,7 @@ void fn_send(int i, SFrame *frame) {
 
 	//SFrame frame1;
 	//memcpy(&frame1, frame, sizeof(message_buf));
-	//printf("[S2] Length: %d\n", frame->ach_Length);
+	printf("[S2] Length: %d\n", frame->ach_Length);
 	
 	// 
 	int msqid;

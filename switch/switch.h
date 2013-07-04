@@ -1,6 +1,8 @@
 #ifndef __switch_H
 #define __switch_H
 #define DEBUG
+#define SWITCH 2 // number of bridgeports
+
 
 typedef struct {
 	unsigned char ach_MACdst[6];
@@ -23,6 +25,9 @@ typedef struct {
 } sIFACES;
 
 void fn_pthread_recv(void *arg);
-//void *pthread_send(void *arg);
+void fn_pthread_send(void *arg);
+void fn_pthread_bridgeport(void *arg);
+
+void fn_pthread_aging(void *arg);
 
 #endif /* __switch_H */
