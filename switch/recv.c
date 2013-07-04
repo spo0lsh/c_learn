@@ -15,9 +15,13 @@ void fn_recv(int i,SFrame *frame) {
 	message_buf  rbuf;
 
     key = 1000 + i;
+    #ifdef DEBUG
 	printf("%d %d\n", key,i );
+	#endif
     if ((msqid = msgget(key, 0666)) < 0) {
+		#ifdef DEBUG
         perror("msgget");
+        #endif
         exit(1);
     }
 
@@ -25,7 +29,9 @@ void fn_recv(int i,SFrame *frame) {
      * Receive an answer of message type 1.
      */
     if (msgrcv(msqid, &rbuf, sizeof(rbuf.frame), 1, 0) < 0) {
+		#ifdef DEBUG
         perror("msgrcv");
+        #endif
         exit(1);
     }
 	//frame = rbuf.frame;
@@ -35,6 +41,7 @@ void fn_recv(int i,SFrame *frame) {
     /*
      * Print the answer.
      */
+    printf("RECV on bridgeport %d\n",i);
 	printf("[R] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5]);
 	printf("[R] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5]);
 	printf("[R] Length: %d\n", frame->ach_Length);
@@ -46,6 +53,9 @@ void fn_recv(int i,SFrame *frame) {
 	/*
 	removing wrong crc
 	*/
+	#ifdef DEBUG
+	printf("CRC\n");
+	#endif
 	//char _ach_crc[4] = "42";
 //	if(strcmp(frame->ach_crc , _ach_crc) == 0) {
 //		#ifdef DEBUG

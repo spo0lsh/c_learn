@@ -1,7 +1,7 @@
 #ifndef __switch_H
 #define __switch_H
 #define DEBUG
-#define SWITCH 2 // number of bridgeports
+#define SWITCH 4 // number of bridgeports
 
 
 typedef struct {
@@ -24,10 +24,7 @@ typedef struct {
 	unsigned int n_IFACEsrc;
 } sIFACES;
 
-void fn_pthread_recv(void *arg);
-void fn_pthread_send(void *arg);
 void fn_pthread_bridgeport(void *arg);
-
 void fn_pthread_aging(void *arg);
 
 #endif /* __switch_H */
