@@ -1,6 +1,6 @@
 #ifndef __switch_H
 #define __switch_H
-#define DEBUG
+//#define DEBUG
 #define SWITCH 4 // number of bridgeports
 
 

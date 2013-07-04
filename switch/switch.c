@@ -28,15 +28,15 @@ int main() {
 		if ( pthread_create( &pthread_bridgeport[i], NULL, (void *) &fn_pthread_bridgeport, (void *) &vals[i]) ) {
 			#ifdef DEBUG
 			printf("blad przy tworzeniu watku\n"); 
-			abort();
 			#endif
+			abort();
 		}
 	}
 	if ( pthread_create( &pthread_aging, NULL, (void *) &fn_pthread_aging, NULL) ) {
 		#ifdef DEBUG
 		printf("blad przy tworzeniu watku\n"); 
-		abort();
 		#endif
+		abort();
 	}
 	/* Waiting for finish by user */
 	printf("q [enter] - quit\n");
@@ -52,34 +52,35 @@ int main() {
 
 void fn_pthread_bridgeport(void *arg) {
 	int *n_bridge;
-	if(NULL != arg) {
-	    n_bridge = (int *) arg;
-	}
-	#ifdef DEBUG
-	printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
-	#endif
-	/* recv frame */
-	SFrame frame;
-	fn_recv(*n_bridge,&frame);
-	/* learn or refresh */
-	
-	/* unicast broadcast multicast */
-	
-	/* flood */
-	int flood=1;
-	if(flood) {
+		if(NULL != arg) {
+			n_bridge = (int *) arg;
+		}
 		#ifdef DEBUG
-		printf("flooding\n");
-		fn_flood(*n_bridge,&frame);
+		printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
 		#endif
-	} else {
-		#ifdef DEBUG
-		printf("unicast\n");
-		#endif
-		/* send frame */
-		fn_send(*n_bridge+1,&frame); // n_bridge+1 wrong!
+		while(1) {
+		/* recv frame */
+		SFrame frame;
+		fn_recv(*n_bridge,&frame);
+		/* learn or refresh */
+		
+		/* unicast broadcast multicast */
+		
+		/* flood */
+		int flood=1;
+		if(flood) {
+			#ifdef DEBUG
+			printf("flooding\n");
+			#endif
+			fn_flood(*n_bridge,&frame);
+		} else {
+			#ifdef DEBUG
+			printf("unicast\n");
+			#endif
+			/* send frame */
+			fn_send(*n_bridge+1,&frame); // n_bridge+1 wrong!
+		}
 	}
-
 	pthread_exit(0); /* exit */
 }
 

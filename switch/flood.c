@@ -16,8 +16,8 @@ void fn_flood(int bridgeport, SFrame *frame) {
 			printf("[F] Length: %d\n", frame->ach_Length);
 			printf("[F] Payload: %s\n", frame->ach_Payload);
 			printf("[F] CRC: %s\n", frame->ach_crc);
-			fn_send(i+1, (void *) frame);
 			#endif
+			fn_send(i+1, (void *) frame);
 		}
 	}
 }
