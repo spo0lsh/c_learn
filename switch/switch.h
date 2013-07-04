@@ -22,4 +22,7 @@ typedef struct {
 	unsigned int n_IFACEsrc;
 } sIFACES;
 
+void fn_pthread_recv(void *arg);
+//void *pthread_send(void *arg);
+
 #endif /* __switch_H */
