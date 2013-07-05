@@ -9,7 +9,7 @@
 //#include <memory.h>
 
 
-void fn_recv(int i,SFrame *frame) {
+int fn_recv(int i,SFrame *frame) {
 	int msqid;
 	key_t key;
 	message_buf  rbuf;
@@ -53,17 +53,16 @@ void fn_recv(int i,SFrame *frame) {
 	/*
 	removing wrong crc
 	*/
-	#ifdef DEBUG
-	printf("CRC\n");
-	#endif
-	char _ach_crc[4] = "43";
+	char _ach_crc[4] = "42";
 	if(strcmp(frame->ach_crc , _ach_crc) == 0) {
 		#ifdef DEBUG
-		printf("PASS\n");
+		printf("[CRC] PASS\n");
 		#endif /* DEBUG */
+		return(1);
 	} else {
 		#ifdef DEBUG
-		printf("DROP\n");
+		printf("[CRC] DROP\n");
 		#endif /* DEBUG */
+		return(0);
 	}
 }

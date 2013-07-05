@@ -58,33 +58,41 @@ int main() {
 void fn_pthread_bridgeport(void *arg) {
 	int *n_bridge;
 	int flood; // flood or unicast
-		if(NULL != arg) {
-			n_bridge = (int *) arg;
-		}
-		#ifdef DEBUG
-		printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
-		#endif
-		while(1) {
+	int crc; // crc
+	if(NULL != arg) {
+		n_bridge = (int *) arg;
+	}
+	#ifdef DEBUG
+	printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
+	#endif
+	SFrame frame;
+	while(1) {
 		/* recv frame */
-		SFrame frame;
-		fn_recv(*n_bridge,&frame);
-		/* learn or refresh */
-		fn_learn_or_refresh();
-		/* unicast broadcast multicast */
-		flood=fn_unicast_broadcast_multicast();
-		/* flood */
-		if(flood) {
-			#ifdef DEBUG
-			printf("flooding\n");
-			#endif
-			fn_flood(*n_bridge,&frame);
-		} else {
-			#ifdef DEBUG
-			printf("unicast\n");
-			#endif
-			/* send frame */
-			fn_send(*n_bridge+1,&frame); // n_bridge+1 wrong!
+		crc=fn_recv(*n_bridge,&frame);
+		if(crc) {
+			/* learn or refresh */
+			fn_learn_or_refresh(*n_bridge,&frame);
+			/* unicast broadcast multicast */
+			flood=fn_unicast_broadcast_multicast(*n_bridge,&frame);
+			/* flood */
+			if(flood) {
+				#ifdef DEBUG
+				printf("flooding\n");
+				#endif
+				fn_flood(*n_bridge,&frame);
+			} else {
+				#ifdef DEBUG
+				printf("unicast\n");
+				#endif
+				/* send frame */
+				fn_send(*n_bridge+1,&frame); // n_bridge+1 wrong!
+			}
+		} 
+		#ifdef DEBUG
+		else {
+			printf("Removing wrong CRC frame\n");
 		}
+		#endif
 	}
 	pthread_exit(0); /* exit */
 }

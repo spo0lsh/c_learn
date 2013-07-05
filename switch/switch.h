@@ -1,7 +1,7 @@
 #ifndef __switch_H
 #define __switch_H
 #define DEBUG
-#define SWITCH 4 // number of bridgeports
+#define SWITCH 2 // number of bridgeports
 #define MAC 16 // mac table = SWITCH * MAC
 #define HASH_TABLE SWITCH * MAC // mac table = SWITCH * MAC
 #define MSQKEYRECV 1000 // key for MQ recv
