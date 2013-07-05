@@ -1,9 +1,9 @@
 #Napisac Makefile do przykladów z wykorzystaniem flag i dopasowania wzorców
 
 CC=gcc
-CFLAGS=-g -Wall -lpthread
-LFLAGS=-lpthread
-LIBS=-lpthread
+CFLAGS=-g -Wall -lpthread -lm
+LFLAGS=-lpthread -lm
+LIBS=-lpthread -lm
 SRCS = $(wildcard *.c)
 PROGS = $(patsubst %.c,%,$(SRCS))
 OBJS = $(patsubst %.c,%.o,$(SRCS))
