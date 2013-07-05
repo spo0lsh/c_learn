@@ -1,6 +1,6 @@
-#ifndef __switch_H
-#define __switch_H
+#ifndef __learn_H
+#define __learn_H
 
+void fn_learn_or_refresh();
 
-
-#endif /* __switch_H */
+#endif /* __learn_H */

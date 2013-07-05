@@ -42,11 +42,11 @@ void fn_recv(int i,SFrame *frame) {
      * Print the answer.
      */
     printf("RECV on bridgeport %d\n",i);
-	printf("[R] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5]);
-	printf("[R] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5]);
-	printf("[R] Length: %d\n", frame->ach_Length);
-	printf("[R] Payload: %s\n", frame->ach_Payload);
-	printf("[R] CRC: %s\n", frame->ach_crc);
+	printf("[RECV] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5]);
+	printf("[RECV] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5]);
+	printf("[RECV] Length: %d\n", frame->ach_Length);
+	printf("[RECV] Payload: %s\n", frame->ach_Payload);
+	printf("[RECV] CRC: %s\n", frame->ach_crc);
 	#endif /* DEBUG */
 
 	
@@ -56,14 +56,14 @@ void fn_recv(int i,SFrame *frame) {
 	#ifdef DEBUG
 	printf("CRC\n");
 	#endif
-	//char _ach_crc[4] = "42";
-//	if(strcmp(frame->ach_crc , _ach_crc) == 0) {
-//		#ifdef DEBUG
-//		printf("PASS\n");
-//		#endif /* DEBUG */
-//	} else {
-//		#ifdef DEBUG
-//		printf("DROP\n");
-//		#endif /* DEBUG */
-//	}
+	char _ach_crc[4] = "43";
+	if(strcmp(frame->ach_crc , _ach_crc) == 0) {
+		#ifdef DEBUG
+		printf("PASS\n");
+		#endif /* DEBUG */
+	} else {
+		#ifdef DEBUG
+		printf("DROP\n");
+		#endif /* DEBUG */
+	}
 }

@@ -9,6 +9,8 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <memory.h>
+#include "learn.h"
+#include "uni_br_multi.h"
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
@@ -67,9 +69,9 @@ void fn_pthread_bridgeport(void *arg) {
 		SFrame frame;
 		fn_recv(*n_bridge,&frame);
 		/* learn or refresh */
-		
+		fn_learn_or_refresh();
 		/* unicast broadcast multicast */
-		flood=1;
+		flood=fn_unicast_broadcast_multicast();
 		/* flood */
 		if(flood) {
 			#ifdef DEBUG

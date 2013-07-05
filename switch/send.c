@@ -45,11 +45,11 @@ void fn_send(int i, SFrame *frame) {
 	else {
 		#ifdef DEBUG			
 		printf("Message: Sent on bridgeport %d\n",i);
-		printf("[S] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5]);
-		printf("[S] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5]);
-		printf("[S] Length: %d\n", frame->ach_Length);
-		printf("[S] Payload: %s\n", frame->ach_Payload);
-		printf("[S] CRC: %s\n", frame->ach_crc);
+		printf("[SEND] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5]);
+		printf("[SEND] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5]);
+		printf("[SEND] Length: %d\n", frame->ach_Length);
+		printf("[SEND] Payload: %s\n", frame->ach_Payload);
+		printf("[SEND] CRC: %s\n", frame->ach_crc);
 		#endif
 		//void();
 	}
