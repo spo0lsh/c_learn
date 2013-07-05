@@ -14,7 +14,7 @@ void fn_recv(int i,SFrame *frame) {
 	key_t key;
 	message_buf  rbuf;
 
-    key = 1000 + i;
+    key = MSQKEYRECV + i;
     #ifdef DEBUG
 	printf("%d %d\n", key,i );
 	#endif

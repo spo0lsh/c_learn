@@ -16,7 +16,7 @@ void fn_send(int i, SFrame *frame) {
 	int msgflg = IPC_CREAT | 0666;
 	key_t key;
 	message_buf sbuf;
-	key = 1100 + i;
+	key = MSQKEYSEND + i;
 	//(void) fprintf(stderr, "\nmsgget: Calling msgget(%#lx,\%#o)\n",key, msgflg);
     if ((msqid = msgget(key, msgflg )) < 0) {
 		#ifdef DEBUG

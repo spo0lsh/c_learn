@@ -3,19 +3,20 @@
 #include "switch.h"
 #include "recv.h"
 #include "flood.h"
+#include "aging.h"
 #include "send.h"
 #include "aging.h"
 #include <pthread.h>
 #include <unistd.h>
 #include <memory.h>
-
-
-
-//void *fn_pthread_recv(void *arg);
-
-
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
 int main() {
+	/* generate bridgeports */
+	generate_interafaces();
+
 	/* thread variables */
 	pthread_t pthread_bridgeport[SWITCH];
 	pthread_t pthread_aging;
@@ -45,6 +46,8 @@ int main() {
 	switch(menu) {
 		case 'q':
 			printf("Quit\n");
+			/* remove interfaces */
+			remove_interafaces();
 		break;
 	}
     return(EXIT_SUCCESS);
@@ -52,6 +55,7 @@ int main() {
 
 void fn_pthread_bridgeport(void *arg) {
 	int *n_bridge;
+	int flood; // flood or unicast
 		if(NULL != arg) {
 			n_bridge = (int *) arg;
 		}
@@ -65,9 +69,8 @@ void fn_pthread_bridgeport(void *arg) {
 		/* learn or refresh */
 		
 		/* unicast broadcast multicast */
-		
+		flood=1;
 		/* flood */
-		int flood=1;
 		if(flood) {
 			#ifdef DEBUG
 			printf("flooding\n");
@@ -87,14 +90,86 @@ void fn_pthread_bridgeport(void *arg) {
 
 void fn_pthread_aging(void *arg) {
 	#ifdef DEBUG
-	printf("fn_aging\n");
+	printf("fn_pthread_aging\n");
 	#endif
 	while(1) {
 		#ifdef DEBUG
-		printf("Aging procedure ...\n");
+		printf("Starting aging procedure ...\n");
 		#endif
+		fn_aging();
 		sleep(AGING);
 	}
 	pthread_exit(0); /* exit */
+}
+
+void generate_interafaces() {
+	int i;
+	#ifdef DEBUG
+	printf("Creating bridgeport pseudo interfaces\n");
+	#endif
+	key_t key; /* key to be passed to msgget() */ 
+	int msqid; /* return value from msgget() */
+	int msgflg = IPC_CREAT | 0666;
+	for(i=0;i<SWITCH;++i) {
+		key = MSQKEYRECV + i + 1; // recv
+		if ((msqid = msgget(key, msgflg )) < 0) {
+			#ifdef DEBUG
+			perror("msgget");
+			#endif
+			exit(1);
+		} 
+		#ifdef DEBUG
+		else {
+				printf("Creating msqid %d key %d\n",msqid,key);
+		}
+		#endif
+	}
+	for(i=0;i<SWITCH;++i) {
+		key = MSQKEYSEND + i + 1; // send
+		if ((msqid = msgget(key, msgflg )) < 0) {
+			#ifdef DEBUG
+			perror("msgget");
+			#endif
+			exit(1);
+		} 
+		#ifdef DEBUG
+		else {
+				printf("Creating msqid %d key %d\n",msqid,key);
+		}
+		#endif
+	}
+
+}
+void remove_interafaces() {
+	int i;
+	key_t key; /* key to be passed to msgget() */ 
+	int msgflg = IPC_CREAT | 0666;
+	#ifdef DEBUG
+	printf("Removing bridgeport pseudo interfaces\n");
+	#endif
+	for(i=0;i<SWITCH;++i) {
+		key = MSQKEYRECV + i + 1; // recv
+		#ifdef DEBUG
+		printf("Removing msqid %d key %d\n", msgget(key, msgflg ),key);
+		#endif
+		if (msgctl(msgget(key, msgflg ), IPC_RMID, NULL) == -1) {
+			#ifdef DEBUG
+			perror("msgctl");
+			#endif
+	//        exit(1);
+		}
+	}
+	for(i=0;i<SWITCH;++i) {
+		key = MSQKEYSEND + i + 1; // recv
+		#ifdef DEBUG
+		printf("Removing msqid %d key %d\n", msgget(key, msgflg ),key);
+		#endif
+		if (msgctl(msgget(key, msgflg ), IPC_RMID, NULL) == -1) {
+			#ifdef DEBUG
+			perror("msgctl");
+			#endif
+	//        exit(1);
+		}
+	}
 }
 
