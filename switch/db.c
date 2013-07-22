@@ -37,8 +37,13 @@ int fn_hash(unsigned char ach_MAC[6]) { // HASH
 	return hash;
 }
 
-void fn_remove(unsigned char ach_MACsrc[6]) { // status
-	int hash = fn_hash(ach_MACsrc);
+void fn_remove(int hash) { // status
+	//int hash = fn_hash(ach_MACsrc);
+	#ifdef DEBUG
+	printf("[DB] before remove\n");
+	printf("%02x:%02x:%02x:%02x:%02x:%02x ", asHASH[hash].ach_MACsrc[0], asHASH[hash].ach_MACsrc[1], asHASH[hash].ach_MACsrc[2], asHASH[hash].ach_MACsrc[3], asHASH[hash].ach_MACsrc[4], asHASH[hash].ach_MACsrc[5]);
+	printf("%d, %d, %d\n", asHASH[hash].n_Port, asHASH[hash].n_Age, asHASH[hash].n_Filter);
+	#endif
 	asHASH[hash].ach_MACsrc[0] = 0;
 	asHASH[hash].ach_MACsrc[1] = 0;
 	asHASH[hash].ach_MACsrc[2] = 0;
@@ -48,6 +53,11 @@ void fn_remove(unsigned char ach_MACsrc[6]) { // status
 	asHASH[hash].n_Port = 0;
 	asHASH[hash].n_Age = 0;
 	asHASH[hash].n_Filter = 0;
+	#ifdef DEBUG
+	printf("[DB] after remove\n");
+	printf("%02x:%02x:%02x:%02x:%02x:%02x ", asHASH[hash].ach_MACsrc[0], asHASH[hash].ach_MACsrc[1], asHASH[hash].ach_MACsrc[2], asHASH[hash].ach_MACsrc[3], asHASH[hash].ach_MACsrc[4], asHASH[hash].ach_MACsrc[5]);
+	printf("%d, %d, %d\n", asHASH[hash].n_Port, asHASH[hash].n_Age, asHASH[hash].n_Filter);
+	#endif
 }
 
 void fn_add_srcmac(unsigned char ach_MACsrc[6],int bridgeport) { // status
@@ -69,6 +79,24 @@ void fn_add_srcmac(unsigned char ach_MACsrc[6],int bridgeport) { // status
 }
 
 void fn_search_rm() { // 
+	int i;
+	time_t now;
+	time(&now);
+	#ifdef DEBUG
+	printf("Now is %ld\n", now);
+	#endif
+	for(i=0;i<HASH_TABLE;i++) {
+		//if(asHASH[i].n_Port != 0 && asHASH[i].n_Age < now && asHASH[i].n_Filter != 0 ) {
+		if(asHASH[i].n_Age < now && asHASH[i].n_Age  != 0 ) {
+			#ifdef DEBUG
+			printf("[DB]Removing hash %d\n",i);
+			#endif
+			fn_remove(i);
+		}
+	}
+	#ifdef DEBUG
+	printf("Now is %ld\n", now);
+	#endif
 }
 
 void fn_entry() { // single entry
