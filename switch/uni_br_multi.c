@@ -40,8 +40,14 @@ int fn_unicast_broadcast_multicast(int bridgeport, SFrame *frame) {
 		int hash;
 		hash=0;
 		hash = fn_hash(frame->ach_MACdst);
-		printf("[U_BR_MC] hash %d\n",hash);
-		//printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n found on port %d\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5],asHASH[hash].n_Port);
-		return 0;
+		printf("[U_BR_MC] hash %d\n",hash+1);
+		if(asHASH[hash].n_Port == 0 ) {
+			printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n not found!\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5]);
+			return 1;
+		} else {
+			printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x found on port %d\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5],asHASH[hash].n_Port);
+			return 0;
+		}
+		
 	}
 }

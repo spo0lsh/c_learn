@@ -87,15 +87,18 @@ void fn_pthread_bridgeport(void *arg) {
 			/* flood */
 			if(flood) {
 				#ifdef DEBUG
-				printf("flooding\n");
+				printf("[FLOOD] flooding\n");
 				#endif
 				fn_flood(*n_bridge,&frame);
 			} else {
+				int hash;
+				hash=0;
+				hash = fn_hash(frame.ach_MACdst);
 				#ifdef DEBUG
-				printf("unicast\n");
+				printf("[FLOOD] unicast to port %d hash %d\n",asHASH[hash].n_Port,hash+1);
 				#endif
 				/* send frame */
-				fn_send(*n_bridge+1,&frame); // n_bridge+1 wrong!
+				fn_send(asHASH[hash].n_Port,&frame); // n_bridge+1 wrong!
 			}
 		} 
 		#ifdef DEBUG
