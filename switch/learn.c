@@ -12,9 +12,7 @@ void fn_learn_or_refresh(int bridgeport, SFrame *frame) {
 	printf("[LEARN] Length: %d\n", frame->ach_Length);
 	printf("[LEARN] Payload: %s\n", frame->ach_Payload);
 	printf("[LEARN] CRC: %s\n", frame->ach_crc);
-	printf("[LEARN] add SRC: %02x:%02x:%02x:%02x:%02x:%02x iface: %d aging: %d HASH: %d\n",frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5],bridgeport,AGING,fn_hash(frame->ach_MACsrc) );
-	//printf("[LEARN] add SRC: %02x:%02x:%02x:%02x:%02x:%02x iface: %d aging: %d",frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5],bridgeport,AGING );
-	//printf(" HASH: %d\n", fn_hash(frame->ach_MACsrc));
+	printf("[LEARN] add SRC: %02x:%02x:%02x:%02x:%02x:%02x iface: %d aging: %d HASH: %d\n",frame->ach_MACsrc[0], frame->ach_MACsrc[1], frame->ach_MACsrc[2], frame->ach_MACsrc[3], frame->ach_MACsrc[4], frame->ach_MACsrc[5],bridgeport,AGING,fn_hash(frame->ach_MACsrc)+1 );
 	#endif
 	fn_add_srcmac(frame->ach_MACsrc,bridgeport);
 }

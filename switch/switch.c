@@ -16,12 +16,12 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
-//sHashTable *asHASH;
+sHashTable *asHASH;
 //asHASH=fn_create_hash();
 
 int main() {
 	/* create database */
-	sHashTable *asHASH;
+	//sHashTable *asHASH;
 	asHASH=fn_create_hash();
 	
 	/* generate bridgeports */

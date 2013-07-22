@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "db.h"
 #include "switch.h"
 #include "uni_br_multi.h"
 #include <memory.h>
+
 
 int fn_unicast_broadcast_multicast(int bridgeport, SFrame *frame) {
 	//unsigned char mac_br[6]  = {0xff,0xff,0xff,0xff,0xff,0xff};
@@ -35,6 +37,11 @@ int fn_unicast_broadcast_multicast(int bridgeport, SFrame *frame) {
 		#ifdef DEBUG
 		printf("[U_BR_MC] unicast\n");
 		#endif
+		int hash;
+		hash=0;
+		hash = fn_hash(frame->ach_MACdst);
+		printf("[U_BR_MC] hash %d\n",hash);
+		//printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n found on port %d\n", frame->ach_MACdst[0], frame->ach_MACdst[1], frame->ach_MACdst[2], frame->ach_MACdst[3], frame->ach_MACdst[4], frame->ach_MACdst[5],asHASH[hash].n_Port);
 		return 0;
 	}
 }
