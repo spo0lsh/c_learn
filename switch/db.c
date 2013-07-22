@@ -60,7 +60,7 @@ void fn_remove(int hash) { // status
 	#endif
 }
 
-void fn_add_srcmac(unsigned char ach_MACsrc[6],int bridgeport) { // status
+void fn_add_srcmac(unsigned char ach_MACsrc[6],int bridgeport,int filter) { // status
 	time_t now;
 	time(&now);
 	#ifdef DEBUG
@@ -75,7 +75,7 @@ void fn_add_srcmac(unsigned char ach_MACsrc[6],int bridgeport) { // status
 	asHASH[hash].ach_MACsrc[5] = ach_MACsrc[5];
 	asHASH[hash].n_Port=bridgeport;
 	asHASH[hash].n_Age=AGING+now;
-	asHASH[hash].n_Filter=0;
+	asHASH[hash].n_Filter=filter;
 }
 
 void fn_search_rm() { // 
@@ -106,6 +106,7 @@ void fn_entry() { // single entry
 }
 
 void fn_readfile() { //
+	
 }
 
 void fn_hash_show() {
