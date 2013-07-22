@@ -10,15 +10,19 @@
 #include <unistd.h>
 #include <memory.h>
 #include "learn.h"
+#include "db.h"
 #include "uni_br_multi.h"
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
 int main() {
+	/* create database */
+	fn_create_hash();
+	
 	/* generate bridgeports */
 	generate_interafaces();
-
+	
 	/* thread variables */
 	pthread_t pthread_bridgeport[SWITCH];
 	pthread_t pthread_aging;
@@ -50,6 +54,7 @@ int main() {
 			printf("Quit\n");
 			/* remove interfaces */
 			remove_interafaces();
+			fn_destroy_hash();
 		break;
 	}
     return(EXIT_SUCCESS);
