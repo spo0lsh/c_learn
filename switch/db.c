@@ -23,15 +23,16 @@ void fn_destroy_hash(sHashTable * Array) {
 	Array=NULL;
 }
 
-int fn_hash(unsigned char ach_MACsrc[6]) { // HASH
+int fn_hash(unsigned char ach_MAC[6]) { // HASH
 	int i;
 	int hash;
 	hash=0;
+	printf("[HASH] %02x:%02x:%02x:%02x:%02x:%02x\n", ach_MAC[0], ach_MAC[1], ach_MAC[2], ach_MAC[3], ach_MAC[4], ach_MAC[5]);
 	for(i=0;i<6;++i) {
 		//#ifdef DEBUG
 		//printf("(%d * %d + %d ) %% %d = %d\n", PRIME, hash, (int)ach_MACsrc[i],HASH_TABLE,( PRIME * hash + (int)ach_MACsrc[i] ) % HASH_TABLE);
 		//#endif
-		hash = (PRIME * hash + (int)ach_MACsrc[i] ) % HASH_TABLE;
+		hash = (PRIME * hash + (int)ach_MAC[i] ) % HASH_TABLE;
 	}
 	return hash;
 }
