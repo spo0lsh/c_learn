@@ -16,9 +16,13 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
+//sHashTable *asHASH;
+//asHASH=fn_create_hash();
+
 int main() {
 	/* create database */
-	fn_create_hash();
+	sHashTable *asHASH;
+	asHASH=fn_create_hash();
 	
 	/* generate bridgeports */
 	generate_interafaces();
@@ -51,10 +55,11 @@ int main() {
 	scanf("%s",&menu);
 	switch(menu) {
 		case 'q':
+			fn_hash_show(asHASH);
 			printf("Quit\n");
 			/* remove interfaces */
 			remove_interafaces();
-			fn_destroy_hash();
+			fn_destroy_hash(asHASH);
 		break;
 	}
     return(EXIT_SUCCESS);
