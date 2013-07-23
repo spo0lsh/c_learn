@@ -66,7 +66,7 @@ void fn_add_srcmac(unsigned char ach_MACsrc[6],int bridgeport,int filter) { // s
 	time_t now;
 	time(&now);
 	#ifdef DEBUG
-	printf("[DB] add %02x:%02x:%02x:%02x:%02x:%02x into %d port %d AGING %ld now: %ld\n", ach_MACsrc[0], ach_MACsrc[1], ach_MACsrc[2], ach_MACsrc[3], ach_MACsrc[4], ach_MACsrc[5],fn_hash(ach_MACsrc)+1,bridgeport,AGING+now,now);
+	printf("[DB] add %02x:%02x:%02x:%02x:%02x:%02x into %d port %d AGING %ld now: %ld\n", ach_MACsrc[0], ach_MACsrc[1], ach_MACsrc[2], ach_MACsrc[3], ach_MACsrc[4], ach_MACsrc[5],fn_hash(ach_MACsrc)+1,bridgeport,aging+now,now);
 	#endif
 	int hash = fn_hash(ach_MACsrc);
 	asHASH[hash].ach_MACsrc[0] = ach_MACsrc[0];
@@ -76,7 +76,7 @@ void fn_add_srcmac(unsigned char ach_MACsrc[6],int bridgeport,int filter) { // s
 	asHASH[hash].ach_MACsrc[4] = ach_MACsrc[4];
 	asHASH[hash].ach_MACsrc[5] = ach_MACsrc[5];
 	asHASH[hash].n_Port=bridgeport;
-	asHASH[hash].n_Age=AGING+now;
+	asHASH[hash].n_Age=aging+now;
 	asHASH[hash].n_Filter=filter;
 }
 
@@ -89,7 +89,7 @@ void fn_search_rm() { //
 	#endif
 	for(i=0;i<HASH_TABLE;i++) {
 		//if(asHASH[i].n_Port != 0 && asHASH[i].n_Age < now && asHASH[i].n_Filter != 0 ) {
-		if(asHASH[i].n_Age < now && asHASH[i].n_Age  != 0 ) {
+		if(asHASH[i].n_Age < now && asHASH[i].n_Age  != 0 && asHASH[i].n_Filter != 1 ) {
 			#ifdef DEBUG
 			printf("[DB]Removing hash %d\n",i);
 			#endif
@@ -103,7 +103,7 @@ void fn_search_rm() { //
 
 void fn_entry() { // single entry
 	#ifdef DEBUG
-	//printf("[DB] adding %02x:%02x:%02x:%02x:%02x:%02x into %d bridgeport %d AGING %d\n", ach_MACsrc[0], ach_MACsrc[1], ach_MACsrc[2], ach_MACsrc[3], ach_MACsrc[4], ach_MACsrc[5],fn_hash(ach_MACsrc),bridgeport,AGING);
+	//printf("[DB] adding %02x:%02x:%02x:%02x:%02x:%02x into %d bridgeport %d AGING %d\n", ach_MACsrc[0], ach_MACsrc[1], ach_MACsrc[2], ach_MACsrc[3], ach_MACsrc[4], ach_MACsrc[5],fn_hash(ach_MACsrc),bridgeport,aging);
 	#endif
 }
 
@@ -117,12 +117,11 @@ void fn_readfile() { //
 	ssize_t read;
 	int i;
 	i=0;
-	int aging;
 	unsigned char ach_MAC[6];
-	
+	aging=AGING;
 	fp=fopen(CONFIGFILE, "r");
 	if (fp == NULL) {
-        perror("Nie udalo sie otworzyc pliku test.txt");
+        perror("Fail open configfile.txt");
     } else {
 		while ((read = getline(&line, &len, fp)) != -1) {
 			++i;

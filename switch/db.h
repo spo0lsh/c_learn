@@ -10,6 +10,7 @@ typedef struct {
 } sHashTable;
 
 sHashTable *asHASH;
+int aging;
 sHashTable *fn_create_hash(); // return hash?
 void fn_destroy_hash(sHashTable *); // status?
 int fn_hash(unsigned char[6]); // HASH
