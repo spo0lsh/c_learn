@@ -1,6 +1,6 @@
-#ifndef __switch_H
-#define __switch_H
+#ifndef __src_dst_iface_H
+#define __src_dst_iface_H
 
+int fn_src_dst_iface(int , int );
 
-
-#endif /* __switch_H */
+#endif /* __src_dst_iface_H */

@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include "src_dst_iface.h"
 
 sHashTable *asHASH;
 int aging;
@@ -103,10 +104,13 @@ void fn_pthread_bridgeport(void *arg) {
 				hash=0;
 				hash = fn_hash(frame.ach_MACdst);
 				#ifdef DEBUG
-				printf("[FLOOD] unicast to port %d hash %d\n",asHASH[hash].n_Port,hash+1);
+				printf("[flood] unicast to port %d hash %d\n",asHASH[hash].n_Port,hash+1);
 				#endif
-				/* send frame */
-				fn_send(asHASH[hash].n_Port,&frame); // n_bridge+1 wrong!
+				/* source destination + filter */
+				if(fn_src_dst_iface(*n_bridge, asHASH[hash].n_Port) && asHASH[hash].n_Port < SWITCH+1) {
+					/* send frame */
+					fn_send(asHASH[hash].n_Port,&frame);
+				}
 			}
 		} 
 		#ifdef DEBUG

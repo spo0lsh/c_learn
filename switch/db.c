@@ -125,7 +125,9 @@ void fn_readfile() { //
     } else {
 		while ((read = getline(&line, &len, fp)) != -1) {
 			++i;
+			#ifdef DEBUG
 			printf("Retrieved line %d of length %zu :\n", i, read);
+			#endif
 			if(i == 1) { //fn_add_srcmac(frame->ach_MACsrc,bridgeport,0);
 				aging=atoi(line);
 				printf("[FIRST] %s", line);
@@ -147,12 +149,16 @@ void fn_readfile() { //
 						ach_MAC[4] = ((line[8] - 87 ) * 16 + (line[9] - 87)) & 0xFF;
 						ach_MAC[5] = ((line[10] - 87 ) * 16 + (line[11] - 87)) & 0xFF;
 					}
+					#ifdef DEBUG
 					printf("MAC: %02x:%02x:%02x:%02x:%02x:%02x port %d\n", ach_MAC[0], ach_MAC[1], ach_MAC[2], ach_MAC[3], ach_MAC[4], ach_MAC[5], atoi(&line[13]));
+					#endif
 					fn_add_srcmac(ach_MAC,atoi(&line[13]),1);
 				}
 			}
 		}
+		#ifdef DEBUG
 		printf("Aging %d\n", aging);
+		#endif
 		free(line);
 		fclose(fp);
 	}
