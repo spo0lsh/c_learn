@@ -104,8 +104,10 @@ int main() {
 		i = i + 1;
 	}
 	*/
+	/*
 	char *text;
 	text = "123456789";
+	//text = (char*)&framecrc;
 	
 	int j;
 	unsigned int byte, crc;
@@ -125,5 +127,27 @@ int main() {
 		i = i + 1;
 	}
 	printf("%08x\n", reverse(~crc));
+	*/
+	//char *text;
+	printf("================\n");
+	//int len = sizeof(SFrameCRC);
+	//printf("%d\n", len);
+	//unsigned char * text = malloc(len);
+	//memcpy(text, &framecrc, len);
+/*typedef struct {
+    int a;
+    char b;
+    short c;
+}mystruct;
+    mystruct x;
+    x.a=1;
+    x.b="c";
+    x.c=2;
+    char *p1 = (char*)&x;           // ok
+    char *p2 = (char*)(void*)&x;    // ok
+	printf("%d %d\n", sizeof(&p1), sizeof(&p2));
+	printf("%d %c %d\n",&p1[0],&p1[1],&p1[2]);
+	*/
 	return(0);
+	
 }
