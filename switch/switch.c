@@ -17,16 +17,21 @@
 #include <sys/msg.h>
 
 sHashTable *asHASH;
-//asHASH=fn_create_hash();
 
 int main() {
 	/* create database */
-	//sHashTable *asHASH;
 	asHASH=fn_create_hash();
+	
+	/* reading file */
+	fn_readfile();
 	
 	/* generate bridgeports */
 	generate_interafaces();
-	
+	fn_hash_show(asHASH);
+	/* remove interfaces */
+	remove_interafaces();
+	fn_destroy_hash(asHASH);	
+	exit(0);
 	/* thread variables */
 	pthread_t pthread_bridgeport[SWITCH];
 	pthread_t pthread_aging;
