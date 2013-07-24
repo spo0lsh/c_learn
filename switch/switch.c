@@ -39,13 +39,13 @@ int main() {
 	/* thread variables */
 	pthread_t pthread_bridgeport[SWITCH];
 	pthread_t pthread_aging;
-	int vals[SWITCH];
-	int i;
+	int an_vals[SWITCH];
+	int n_i;
 
 	/* create threads */  
-	for(i=0;i<SWITCH;++i) {
-		vals[i] = i + 1;
-		if ( pthread_create( &pthread_bridgeport[i], NULL, (void *) &fn_pthread_bridgeport, (void *) &vals[i]) ) {
+	for(n_i=0;n_i<SWITCH;++n_i) {
+		an_vals[n_i] = n_i + 1;
+		if ( pthread_create( &pthread_bridgeport[n_i], NULL, (void *) &fn_pthread_bridgeport, (void *) &an_vals[n_i]) ) {
 			#ifdef DEBUG
 			printf("blad przy tworzeniu watku\n"); 
 			#endif

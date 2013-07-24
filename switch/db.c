@@ -40,7 +40,6 @@ int fn_hash(unsigned char ach_MAC[6]) { // HASH
 }
 
 void fn_remove(int hash) { // status
-	//int hash = fn_hash(ach_MACsrc);
 	#ifdef DEBUG
 	printf("[DB] before remove\n");
 	printf("%02x:%02x:%02x:%02x:%02x:%02x ", asHASH[hash].ach_MACsrc[0], asHASH[hash].ach_MACsrc[1], asHASH[hash].ach_MACsrc[2], asHASH[hash].ach_MACsrc[3], asHASH[hash].ach_MACsrc[4], asHASH[hash].ach_MACsrc[5]);
