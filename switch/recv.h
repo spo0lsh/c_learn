@@ -1,11 +1,12 @@
 #ifndef __recv_H
 #define __recv_H
 
-typedef struct msgbuf {
-	long    mtype;
-	SFrame frame;
-} message_buf;
-
-int fn_recv(int i,SFrame *frame);
+#ifndef __send_H
+typedef struct {
+	long    d_Mtype;
+	SFrame s_Frame;
+} SMessage_buf;
+#endif
+int fn_recv(int ,SFrame *);
 
 #endif /* __recv_H */
