@@ -21,12 +21,13 @@ typedef struct {
 	char ach_crc[4]; // 32bit crc
 } SFrame;
 
+#pragma pack(1)
 typedef struct {
 	unsigned char ach_MACdst[6];
 	unsigned char ach_MACsrc[6];
 	int ach_Length;
 	char ach_Payload[46]; // minimal
-} SFrameCRC;
+} __attribute__((packed))  SFrameCRC;
 
 
 int main() {
@@ -48,6 +49,10 @@ int main() {
 	frame.ach_MACdst[5] = 0xff;
 
 	frame.ach_Length = 666;
+	int du;
+	for(du=0;du<46;++du) {
+		frame.ach_Payload[du] = 0x00;
+	}
 	(void) strcpy(frame.ach_Payload,"DUAP");
 	(void) strcpy(frame.ach_crc,"42");
 	
@@ -130,24 +135,42 @@ int main() {
 	*/
 	//char *text;
 	printf("================\n");
-	//int len = sizeof(SFrameCRC);
-	//printf("%d\n", len);
-	//unsigned char * text = malloc(len);
-	//memcpy(text, &framecrc, len);
-/*typedef struct {
-    int a;
-    char b;
-    short c;
-}mystruct;
-    mystruct x;
-    x.a=1;
-    x.b="c";
-    x.c=2;
-    char *p1 = (char*)&x;           // ok
-    char *p2 = (char*)(void*)&x;    // ok
-	printf("%d %d\n", sizeof(&p1), sizeof(&p2));
-	printf("%d %c %d\n",&p1[0],&p1[1],&p1[2]);
-	*/
+	unsigned char *text = (unsigned char*)&framecrc;
+	//unsigned char *text;
+	//text = "12345678";
+	for(i=0;i<sizeof(framecrc);++i) {
+		//printf("\"%03d\"",text[i]);
+		printf("%02X ",text[i]);
+	}
+  	printf("\n");
+	for(i=0;i<sizeof(framecrc);++i) {
+		printf("%02d ", i);
+	}
+	printf("\n");
+	printf("sizeof pointer array %d sizeof frame %d\n", sizeof(text), sizeof(framecrc));
+	printf("================\n");
+	int j;
+	unsigned int byte, crc;
+	i = 0;
+	crc = 0xFFFFFFFF;
+	//unsigned char *text;
+	//text = "123456789";
+	//printf("%d %c\n", text[0],text[0]);
+	//while(text[i] != 0) {
+	for(i=0;i<sizeof(framecrc);++i) {
+		byte = text[i];            // Get next byte.
+		byte = reverse(byte);         // 32-bit reversal.
+		for (j = 0; j <= 7; j++) {    // Do eight times.
+			if ((int)(crc ^ byte) < 0) {
+				crc = (crc << 1) ^ 0x04C11DB7;
+			} else {
+				crc = crc << 1;
+			}
+			byte = byte << 1;          // Ready next msg bit.
+		}
+		i = i + 1;
+	}
+	printf("%08x\n", reverse(~crc));
 	return(0);
 	
 }
