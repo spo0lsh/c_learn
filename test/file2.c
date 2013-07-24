@@ -32,7 +32,7 @@ int main() {
 
 	int a1[12];
 	for(i=0;i<12;++i) {
-		if(line[i] < 97) {
+		if(line[i] < 97 ) {
 			a1[i] = (line[i] - 48 );
 		} else {
 			a1[i] = (line[i] - 87 );

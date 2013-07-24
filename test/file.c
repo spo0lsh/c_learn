@@ -38,41 +38,29 @@ int main() {
 		} else {
 			printf("%s", line);
 			if(line[0] != '\n' ) {
-				int a1;
+				/*int a1;
 				int a2;
 				int a3;
 				int a4;
 				int a5;
-				int a6;
+				int a6;*/
 				if(line[j] < 97) {
-					a1 = (line[0] - 48 ) * 16 + (line[1] - 48);
-					ach_MACsrc[0] = a1 & 0xFF;
-					a2 = (line[2] - 48 ) * 16 + (line[3] - 48);
-					ach_MACsrc[1] = a2 & 0xFF;
-					a3 = (line[4] - 48 ) * 16 + (line[5] - 48);
-					ach_MACsrc[2] = a3 & 0xFF;
-					a4 = (line[6] - 48 ) * 16 + (line[7] - 48);
-					ach_MACsrc[3] = a4 & 0xFF;
-					a5 = (line[8] - 48 ) * 16 + (line[9] - 48);
-					ach_MACsrc[4] = a5 & 0xFF;
-					a6 = (line[10] - 48 ) * 16 + (line[11] - 48);
-					ach_MACsrc[5] = a6 & 0xFF;
+					ach_MACsrc[0] = ((line[0] - 48 ) * 16 + (line[1] - 48)) & 0xFF;
+					ach_MACsrc[1] = ((line[2] - 48 ) * 16 + (line[3] - 48)) & 0xFF;
+					ach_MACsrc[2] = ((line[4] - 48 ) * 16 + (line[5] - 48)) & 0xFF;
+					ach_MACsrc[3] = ((line[6] - 48 ) * 16 + (line[7] - 48)) & 0xFF;
+					ach_MACsrc[4] = ((line[8] - 48 ) * 16 + (line[9] - 48)) & 0xFF;
+					ach_MACsrc[5] = ((line[10] - 48 ) * 16 + (line[11] - 48)) & 0xFF;
 				} else {
-					a1 = (line[0] - 87 ) * 16 + (line[1] - 87);
-					ach_MACsrc[0] = a1 & 0xFF;
-					a2 = (line[2] - 87 ) * 16 + (line[3] - 87);
-					ach_MACsrc[1] = a2 & 0xFF;
-					a3 = (line[4] - 87 ) * 16 + (line[5] - 87);
-					ach_MACsrc[2] = a3 & 0xFF;
-					a4 = (line[6] - 87 ) * 16 + (line[7] - 87);
-					ach_MACsrc[3] = a4 & 0xFF;
-					a5 = (line[8] - 87 ) * 16 + (line[9] - 87);
-					ach_MACsrc[4] = a5 & 0xFF;
-					a6 = (line[10] - 87 ) * 16 + (line[11] - 87);
-					ach_MACsrc[5] = a6 & 0xFF;
+					ach_MACsrc[0] = ((line[0] - 87 ) * 16 + (line[1] - 87)) & 0xFF;
+					ach_MACsrc[1] = ((line[2] - 87 ) * 16 + (line[3] - 87)) & 0xFF;
+					ach_MACsrc[2] = ((line[4] - 87 ) * 16 + (line[5] - 87)) & 0xFF;
+					ach_MACsrc[3] = ((line[6] - 87 ) * 16 + (line[7] - 87)) & 0xFF;
+					ach_MACsrc[4] = ((line[8] - 87 ) * 16 + (line[9] - 87)) & 0xFF;
+					ach_MACsrc[5] = ((line[10] - 87 ) * 16 + (line[11] - 87)) & 0xFF;
 				}
 				bridgeport=atoi(&line[13]);
-				printf("%02d:%02d:%02d:%02d:%02d:%02d %d\n",a1,a2,a3,a4,a5,a6,bridgeport);
+				//printf("%02d:%02d:%02d:%02d:%02d:%02d %d\n",a1,a2,a3,a4,a5,a6,bridgeport);
 				printf("MAC: %02x:%02x:%02x:%02x:%02x:%02x port %d\n", ach_MACsrc[0], ach_MACsrc[1], ach_MACsrc[2], ach_MACsrc[3], ach_MACsrc[4], ach_MACsrc[5], bridgeport);
 				printf("\n");
 			}

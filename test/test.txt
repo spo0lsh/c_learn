@@ -5,3 +5,6 @@
 ffffffffffff 2
 012345678901 5
 aabbccddeeff 5
+f00000000000 16
+a0a0a0a0a0a0 11
+0a0a0a0a0a0a 10
