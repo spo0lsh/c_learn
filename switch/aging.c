@@ -5,7 +5,7 @@
 
 void fn_aging() {
 	#ifdef DEBUG
-	printf("Aging procedure ... %d\n", aging);
+	printf("Aging procedure ... %d\n", n_aging);
 	#endif
 	fn_search_rm();
 }

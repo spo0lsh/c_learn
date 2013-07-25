@@ -18,7 +18,7 @@
 #include "src_dst_iface.h"
 
 sHashTable *asHASH;
-int aging;
+int n_aging;
 
 int main() {
 	/* create database */
@@ -60,9 +60,9 @@ int main() {
 	}
 	/* Waiting for finish by user */
 	printf("q [enter] - quit\n");
-	char menu;
-	scanf("%s",&menu);
-	switch(menu) {
+	char ch_menu;
+	scanf("%s",&ch_menu);
+	switch(ch_menu) {
 		case 'q':
 			fn_hash_show(asHASH);
 			printf("Quit\n");
@@ -74,12 +74,12 @@ int main() {
     return(EXIT_SUCCESS);
 }
 
-void fn_pthread_bridgeport(void *arg) {
+void fn_pthread_bridgeport(void * p_arg) {
 	int *n_bridge;
-	int flood; // flood or unicast
-	int crc; // crc
-	if(NULL != arg) {
-		n_bridge = (int *) arg;
+	int n_flood; // flood or unicast
+	int n_crc; // crc
+	if(NULL != p_arg) {
+		n_bridge = (int *) p_arg;
 	}
 	#ifdef DEBUG
 	printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
@@ -87,14 +87,14 @@ void fn_pthread_bridgeport(void *arg) {
 	SFrame frame;
 	while(1) {
 		/* recv frame */
-		crc=fn_recv(*n_bridge,&frame);
-		if(crc) {
+		n_crc=fn_recv(*n_bridge,&frame);
+		if(n_crc) {
 			/* learn or refresh */
 			fn_learn_or_refresh(*n_bridge,&frame);
 			/* unicast broadcast multicast */
-			flood=fn_unicast_broadcast_multicast(*n_bridge,&frame);
+			n_flood=fn_unicast_broadcast_multicast(*n_bridge,&frame);
 			/* flood */
-			if(flood) {
+			if(n_flood) {
 				#ifdef DEBUG
 				printf("[FLOOD] flooding\n");
 				#endif
@@ -138,15 +138,15 @@ void fn_pthread_aging(void *arg) {
 }
 
 void generate_interafaces() {
-	int i;
+	int n_i;
 	#ifdef DEBUG
 	printf("Creating bridgeport pseudo interfaces\n");
 	#endif
 	key_t key; /* key to be passed to msgget() */ 
 	int msqid; /* return value from msgget() */
 	int msgflg = IPC_CREAT | 0666;
-	for(i=0;i<SWITCH;++i) {
-		key = MSQKEYRECV + i + 1; // recv
+	for(n_i=0;n_i<SWITCH;++n_i) {
+		key = MSQKEYRECV + n_i + 1; // recv
 		if ((msqid = msgget(key, msgflg )) < 0) {
 			#ifdef DEBUG
 			perror("msgget");
@@ -159,8 +159,8 @@ void generate_interafaces() {
 		}
 		#endif
 	}
-	for(i=0;i<SWITCH;++i) {
-		key = MSQKEYSEND + i + 1; // send
+	for(n_i=0;n_i<SWITCH;++n_i) {
+		key = MSQKEYSEND + n_i + 1; // send
 		if ((msqid = msgget(key, msgflg )) < 0) {
 			#ifdef DEBUG
 			perror("msgget");
@@ -176,14 +176,14 @@ void generate_interafaces() {
 
 }
 void remove_interafaces() {
-	int i;
+	int n_i;
 	key_t key; /* key to be passed to msgget() */ 
 	int msgflg = IPC_CREAT | 0666;
 	#ifdef DEBUG
 	printf("Removing bridgeport pseudo interfaces\n");
 	#endif
-	for(i=0;i<SWITCH;++i) {
-		key = MSQKEYRECV + i + 1; // recv
+	for(n_i=0;n_i<SWITCH;++n_i) {
+		key = MSQKEYRECV + n_i + 1; // recv
 		#ifdef DEBUG
 		printf("Removing msqid %d key %d\n", msgget(key, msgflg ),key);
 		#endif
@@ -194,8 +194,8 @@ void remove_interafaces() {
 	//        exit(1);
 		}
 	}
-	for(i=0;i<SWITCH;++i) {
-		key = MSQKEYSEND + i + 1; // recv
+	for(n_i=0;n_i<SWITCH;++n_i) {
+		key = MSQKEYSEND + n_i + 1; // recv
 		#ifdef DEBUG
 		printf("Removing msqid %d key %d\n", msgget(key, msgflg ),key);
 		#endif
