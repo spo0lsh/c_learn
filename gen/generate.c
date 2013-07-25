@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "generate.h"
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #define DEBUG
 
 int main(int argc, char *argv[]){
@@ -32,8 +36,8 @@ int main(int argc, char *argv[]){
 	
 	//unsigned char ach_MACsrc[6];
 	//unsigned char ach_MACdst[6];
-	if(argc < 2) {
-		printf("%s <filename>\n", argv[0]);
+	if(argc < 3) {
+		printf("%s <filename> <bridgeport>\n", argv[0]);
 		return(1);
 	}
 	
@@ -98,6 +102,35 @@ int main(int argc, char *argv[]){
 	printf("Payload: %s\n", s_frame.ach_Payload);
 	printf("CRC: %02x%02x%02x%02x\n", s_frame.ach_crc[0],s_frame.ach_crc[1],s_frame.ach_crc[2],s_frame.ach_crc[3]);
 
+
+	int msqid;
+	int msgflg = IPC_CREAT | 0666;
+	key_t key;
+	message_buf sbuf;
+	key = 1000 + atoi(argv[2]);
+	//key = ftok("/tmp/bridge0", 'b');
+	
+	//(void) fprintf(stderr, "\nmsgget: Calling msgget(%#lx,\%#o)\n",key, msgflg);
+    if ((msqid = msgget(key, msgflg )) < 0) {
+        perror("msgget");
+        return(1);
+    }
+    else 
+		(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
+	
+	sbuf.mtype = 1;
+	(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
+	sbuf.frame = s_frame;
+	printf("Frame Length: %d\n", sbuf.frame.ach_Length);
+	(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", msqid);
+	
+	if (msgsnd(msqid, &sbuf, sizeof(sbuf.frame), IPC_NOWAIT) < 0) {
+		//printf("%d %"l %l \n", msqid, sbuf.mtype, sizeof(sbuf.frame) );
+		perror("msgsnd");
+		exit(1);
+	} else 
+		printf("Message: Sent\n");
+	
 	return(0);
 }
 

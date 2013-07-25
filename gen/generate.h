@@ -17,13 +17,14 @@ typedef struct {
 	unsigned char ach_crc[4]; // 32bit crc
 } SFrame;
 
-unsigned fn_reverse(unsigned );
-unsigned int fn_crc32(unsigned char * ,int );
-unsigned int fn_crc_frame(SFrame *);
-
 typedef struct msgbuf {
 	long    mtype;
 	SFrame frame;
 } message_buf;
+
+unsigned fn_reverse(unsigned );
+unsigned int fn_crc32(unsigned char * ,int );
+unsigned int fn_crc_frame(SFrame *);
+
 
 #endif /* __generate_H */

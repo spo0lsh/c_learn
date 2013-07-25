@@ -12,7 +12,7 @@ typedef struct {
 	unsigned char ach_MACsrc[6];
 	int ach_Length;
 	char ach_Payload[46]; // minimal
-	char ach_crc[4]; // 32bit crc
+	unsigned char ach_crc[4]; // 32bit crc
 } SFrame;
 
 typedef int n_hash;

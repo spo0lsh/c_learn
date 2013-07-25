@@ -1,22 +1,31 @@
-#Napisac Makefile do przykladów z wykorzystaniem flag i dopasowania wzorców
-
 CC=gcc
 CFLAGS=-g -Wall
 LFLAGS=
-LIBS=
-SRCS = $(wildcard *.c)
-PROGS = $(patsubst %.c,%,$(SRCS))
-OBJS = $(patsubst %.c,%.o,$(SRCS))
+LIBS=-lpthread -lm
+SRCS_SWITCH = generate.c #$(wildcard *.c)
+PROGS_SWITCH = generate #$(patsubst %.c,%,$(SRCS_SWITCH))
+OBJS_SWITCH = $(patsubst %.c,%.o,$(SRCS_SWITCH))
 
-all: objs progs
+SRCS_RECV = gen_recv.c #$(wildcard *.c)
+PROGS_RECV = gen_recv #$(patsubst %.c,%,$(SRCS_RECV))
+OBJS_RECV = $(patsubst %.c,%.o,$(SRCS_RECV))
 
-objs: $(OBJS)
+all: objs_switch progs_switch 
+
+objs_switch: $(OBJS_SWITCH)
 %.o : %.c
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $<
+	$(CC) $(CFLAGS) $(LIBS) -c -o $@ $<
 
-progs: $(PROGS)
-%: %.c
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $<
+progs_switch: $(OBJS_SWITCH)
+	$(CC) -o $(PROGS_SWITCH) $(LIBS) $(OBJS_SWITCH)
+
+objs_recv: $(OBJS_RECV)
+%.o : %.c
+	$(CC) $(CFLAGS) $(LIBS) -c -o $@ $<
+
+progs_recv: $(OBJS_RECV)
+	$(CC) -o $(PROGS_RECV) $(LIBS) $(OBJS_RECV)
+
 	
 clean:
-	rm -f $(PROGS) $(OBJS)
+	rm -f $(PROGS_SWITCH) $(OBJS_SWITCH) $(PROGS_RECV) $(OBJS_RECV)

@@ -46,7 +46,7 @@ int fn_recv(int n_i,SFrame *s_Frame) {
 	printf("[RECV] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", s_Frame->ach_MACsrc[0], s_Frame->ach_MACsrc[1], s_Frame->ach_MACsrc[2], s_Frame->ach_MACsrc[3], s_Frame->ach_MACsrc[4], s_Frame->ach_MACsrc[5]);
 	printf("[RECV] Length: %d\n", s_Frame->ach_Length);
 	printf("[RECV] Payload: %s\n", s_Frame->ach_Payload);
-	printf("[RECV] CRC: %s\n", s_Frame->ach_crc);
+	printf("[RECV] CRC: %02x%02x%02x%02x\n",s_Frame->ach_crc[0],s_Frame->ach_crc[1],s_Frame->ach_crc[2],s_Frame->ach_crc[3]);
 	#endif /* DEBUG */
 
 	
