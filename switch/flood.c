@@ -15,7 +15,7 @@ void fn_flood(int n_bridgeport, SFrame *ps_Frame) {
 			printf("[FLOOD] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_Frame->ach_MACsrc[0], ps_Frame->ach_MACsrc[1], ps_Frame->ach_MACsrc[2], ps_Frame->ach_MACsrc[3], ps_Frame->ach_MACsrc[4], ps_Frame->ach_MACsrc[5]);
 			printf("[FLOOD] Length: %d\n", ps_Frame->ach_Length);
 			printf("[FLOOD] Payload: %s\n", ps_Frame->ach_Payload);
-			printf("[FLOOD] CRC: %s\n", ps_Frame->ach_crc);
+			printf("[FLOOD] CRC: %02x%02x%02x%02x\n",ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
 			#endif
 			fn_send(i+1, (void *) ps_Frame);
 		}

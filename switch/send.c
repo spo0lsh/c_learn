@@ -46,7 +46,7 @@ void fn_send(int n_i, SFrame *S_Frame) {
 		printf("[SEND] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", S_Frame->ach_MACsrc[0], S_Frame->ach_MACsrc[1], S_Frame->ach_MACsrc[2], S_Frame->ach_MACsrc[3], S_Frame->ach_MACsrc[4], S_Frame->ach_MACsrc[5]);
 		printf("[SEND] Length: %d\n", S_Frame->ach_Length);
 		printf("[SEND] Payload: %s\n", S_Frame->ach_Payload);
-		printf("[SEND] CRC: %s\n", S_Frame->ach_crc);
+		printf("[SEND] CRC: %02x%02x%02x%02x\n",S_Frame->ach_crc[0],S_Frame->ach_crc[1],S_Frame->ach_crc[2],S_Frame->ach_crc[3]);
 		#endif
 		//void();
 	}

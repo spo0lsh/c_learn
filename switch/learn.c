@@ -12,7 +12,7 @@ void fn_learn_or_refresh(int n_bridgeport, SFrame *ps_frame) {
 	printf("[LEARN] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_frame->ach_MACsrc[0], ps_frame->ach_MACsrc[1], ps_frame->ach_MACsrc[2], ps_frame->ach_MACsrc[3], ps_frame->ach_MACsrc[4], ps_frame->ach_MACsrc[5]);
 	printf("[LEARN] Length: %d\n", ps_frame->ach_Length);
 	printf("[LEARN] Payload: %s\n", ps_frame->ach_Payload);
-	printf("[LEARN] CRC: %s\n", ps_frame->ach_crc);
+	printf("[LEARN] CRC: %02x%02x%02x%02x\n",ps_frame->ach_crc[0],ps_frame->ach_crc[1],ps_frame->ach_crc[2],ps_frame->ach_crc[3]);
 	#endif
 	n_hash=0;
 	n_hash = fn_hash(ps_frame->ach_MACsrc);

@@ -49,6 +49,7 @@ int main(int argc, char *argv[]){
 	printf("Length: %d\n", frame->ach_Length);
 	printf("Payload: %s\n", frame->ach_Payload);
 	printf("CRC: %s\n", frame->ach_crc);
+	printf("CRC: %02x%02x%02x%02x\n", frame.ach_crc[0],frame.ach_crc[1],frame.ach_crc[2],frame.ach_crc[3]);
 
 
     return(EXIT_SUCCESS);
