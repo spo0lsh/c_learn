@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include "src_dst_iface.h"
+#include "switch.h"
 
 int fn_src_dst_iface(int n_src, int n_dst) {
 	#ifdef DEBUG

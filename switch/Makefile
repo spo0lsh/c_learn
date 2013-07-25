@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-g -Wall
 LFLAGS=
 LIBS=-lpthread -lm
-SRCS_SWITCH = switch.c recv.c send.c learn.c uni_br_multi.c src_dst_iface.c flood.c aging.c db.c #$(wildcard *.c)
+SRCS_SWITCH = switch.c recv.c send.c learn.c uni_br_multi.c src_dst_iface.c flood.c aging.c db.c crc.c #$(wildcard *.c)
 PROGS_SWITCH = switch #$(patsubst %.c,%,$(SRCS_SWITCH))
 OBJS_SWITCH = $(patsubst %.c,%.o,$(SRCS_SWITCH))
 

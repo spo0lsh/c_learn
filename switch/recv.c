@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-//#include <memory.h>
+#include "crc.h"
 
 
 int fn_recv(int n_i,SFrame *s_Frame) {
@@ -54,6 +54,11 @@ int fn_recv(int n_i,SFrame *s_Frame) {
 	removing wrong crc
 	*/
 	char _ach_crc[4] = "42";
+	//debug start
+	int d=	fn_crc_frame(s_Frame);
+	printf("d=%d\n",d);
+	//exit(0);
+	//debug end
 	if(strcmp(s_Frame->ach_crc , _ach_crc) == 0) {
 		#ifdef DEBUG
 		printf("[CRC] PASS\n");

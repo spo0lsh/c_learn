@@ -72,39 +72,46 @@ void fn_pthread_bridgeport(void * p_arg) {
 	int *n_bridge;
 	int n_flood; // flood or unicast
 	int n_crc; // crc
+	int n_hash;
 	if(NULL != p_arg) {
 		n_bridge = (int *) p_arg;
 	}
 	#ifdef DEBUG
 	printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
 	#endif
-	SFrame frame;
+	SFrame s_Frame;
 	while(1) {
 		/* recv frame */
-		n_crc=fn_recv(*n_bridge,&frame);
+		n_crc=fn_recv(*n_bridge,&s_Frame);
 		if(n_crc) {
 			/* learn or refresh */
-			fn_learn_or_refresh(*n_bridge,&frame);
+			fn_learn_or_refresh(*n_bridge,&s_Frame);
 			/* unicast broadcast multicast */
-			n_flood=fn_unicast_broadcast_multicast(*n_bridge,&frame);
-			/* flood */
-			if(n_flood) {
-				#ifdef DEBUG
-				printf("[FLOOD] flooding\n");
-				#endif
-				fn_flood(*n_bridge,&frame);
-			} else {
-				int hash;
-				hash=0;
-				hash = fn_hash(frame.ach_MACdst);
-				#ifdef DEBUG
-				printf("[flood] unicast to port %d hash %d\n",asHASH[hash].n_Port,hash+1);
-				#endif
-				/* source destination + filter */
-				if(fn_src_dst_iface(*n_bridge, asHASH[hash].n_Port) && asHASH[hash].n_Port < SWITCH+1) {
-					/* send frame */
-					fn_send(asHASH[hash].n_Port,&frame);
+			n_hash = fn_hash(s_Frame.ach_MACsrc);
+			if(asHASH[n_hash].n_Filter == 0) {
+				n_flood=fn_unicast_broadcast_multicast(*n_bridge,&s_Frame);
+				/* flood */
+				if(n_flood) {
+					#ifdef DEBUG
+					printf("[FLOOD] flooding\n");
+					#endif
+					fn_flood(*n_bridge,&s_Frame);
+				} else {
+					n_hash=0;
+					n_hash = fn_hash(s_Frame.ach_MACdst);
+					#ifdef DEBUG
+					printf("[flood] unicast to port %d hash %d\n",asHASH[n_hash].n_Port,n_hash+1);
+					#endif
+					/* source destination + filter */
+					if(fn_src_dst_iface(*n_bridge, asHASH[n_hash].n_Port) && asHASH[n_hash].n_Port < SWITCH+1) {
+						/* send frame */
+						fn_send(asHASH[n_hash].n_Port,&s_Frame);
+					}
 				}
+			} else {
+				#ifdef DEBUG
+				printf("[FILTER] removing frame\n");
+				#endif
 			}
 		} 
 		#ifdef DEBUG

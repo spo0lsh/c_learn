@@ -9,6 +9,7 @@
 int fn_unicast_broadcast_multicast(int bridgeport, SFrame *s_Frame) {
 	/* something to check MAC addresses */
 	int n_hash;
+	n_hash=0;
 	#ifdef DEBUG
 	printf("fn_unicast_broadcast_multicast %d\n",bridgeport);
 	printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", s_Frame->ach_MACdst[0], s_Frame->ach_MACdst[1], s_Frame->ach_MACdst[2], s_Frame->ach_MACdst[3], s_Frame->ach_MACdst[4], s_Frame->ach_MACdst[5]);
@@ -26,7 +27,6 @@ int fn_unicast_broadcast_multicast(int bridgeport, SFrame *s_Frame) {
 		#ifdef DEBUG
 		printf("[U_BR_MC] unicast\n");
 		#endif
-		n_hash=0;
 		n_hash = fn_hash(s_Frame->ach_MACdst);
 		printf("[U_BR_MC] hash %d\n",n_hash+1);
 		if(asHASH[n_hash].n_Port == 0 ) {
