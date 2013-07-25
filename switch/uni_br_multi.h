@@ -3,6 +3,6 @@
 
 sHashTable *asHASH;
 
-int fn_unicast_broadcast_multicast(int bridgeport, SFrame *frame);
+int fn_unicast_broadcast_multicast(int , SFrame *);
 
 #endif /* __switch_H */

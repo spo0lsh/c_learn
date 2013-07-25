@@ -2,7 +2,7 @@
 #define __switch_H
 #define DEBUG
 #define SWITCH 2 // number of bridgeports
-#define MAC 16 // mac table = SWITCH * MAC
+#define MAC 8 // mac table = SWITCH * MAC
 #define HASH_TABLE (SWITCH * MAC) // mac table = SWITCH * MAC
 #define MSQKEYRECV 1000 // key for MQ recv
 #define MSQKEYSEND 1100 // key for MQ send
@@ -29,6 +29,6 @@ typedef struct {
 
 void fn_pthread_bridgeport(void *arg);
 void fn_pthread_aging(void *arg);
-void generate_interafaces();
-void remove_interafaces();
+void fn_generate_interafaces();
+void fn_remove_interafaces();
 #endif /* __switch_H */

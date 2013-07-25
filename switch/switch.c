@@ -28,13 +28,7 @@ int main() {
 	fn_readfile();
 	
 	/* generate bridgeports */
-	generate_interafaces();
-	
-	//fn_hash_show(asHASH);
-	/* remove interfaces */
-	//remove_interafaces();
-	//fn_destroy_hash(asHASH);	
-	//exit(0);
+	fn_generate_interafaces();
 	
 	/* thread variables */
 	pthread_t pthread_bridgeport[SWITCH];
@@ -67,7 +61,7 @@ int main() {
 			fn_hash_show(asHASH);
 			printf("Quit\n");
 			/* remove interfaces */
-			remove_interafaces();
+			fn_remove_interafaces();
 			fn_destroy_hash(asHASH);
 		break;
 	}
@@ -137,7 +131,7 @@ void fn_pthread_aging(void *arg) {
 	pthread_exit(0); /* exit */
 }
 
-void generate_interafaces() {
+void fn_generate_interafaces() {
 	int n_i;
 	#ifdef DEBUG
 	printf("Creating bridgeport pseudo interfaces\n");
@@ -175,7 +169,7 @@ void generate_interafaces() {
 	}
 
 }
-void remove_interafaces() {
+void fn_remove_interafaces() {
 	int n_i;
 	key_t key; /* key to be passed to msgget() */ 
 	int msgflg = IPC_CREAT | 0666;
