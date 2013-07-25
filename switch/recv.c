@@ -53,13 +53,7 @@ int fn_recv(int n_i,SFrame *s_Frame) {
 	/*
 	removing wrong crc
 	*/
-	char _ach_crc[4] = "42";
-	//debug start
-	int d=	fn_crc_frame(s_Frame);
-	printf("d=%d\n",d);
-	//exit(0);
-	//debug end
-	if(strcmp(s_Frame->ach_crc , _ach_crc) == 0) {
+	if(fn_crc_frame(s_Frame)) {
 		#ifdef DEBUG
 		printf("[CRC] PASS\n");
 		#endif /* DEBUG */
