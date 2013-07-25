@@ -18,7 +18,9 @@ unsigned int crc32(unsigned char *message,int size) {
    unsigned int byte, crc;
 
    i = 0;
+   j=0;
    crc = 0xFFFFFFFF;
+   byte=0;
    for(i=0;i<size;++i) {
       byte = message[i];            // Get next byte.
       byte = reverse(byte);         // 32-bit reversal.
@@ -55,21 +57,24 @@ int main() {
 	/* tworzenie frame */
 	
 	SFrame frame;
-	frame.ach_MACsrc[0] = 0x00;
-	frame.ach_MACsrc[1] = 0x0d;
-	frame.ach_MACsrc[2] = 0x3f;
-	frame.ach_MACsrc[3] = 0xff;
-	frame.ach_MACsrc[4] = 0x12;
-	frame.ach_MACsrc[5] = 0x5f;
+       frame.ach_MACdst[0] = 0x00;
+        frame.ach_MACdst[1] = 0x0d;
+    frame.ach_MACdst[2] = 0x3f;
+    frame.ach_MACdst[3] = 0xff;
+    frame.ach_MACdst[4] = 0x02;
+    frame.ach_MACdst[5] = 0x5f;
 
-	frame.ach_MACdst[0] = 0x00;
-	frame.ach_MACdst[1] = 0x0d;
-	frame.ach_MACdst[2] = 0x3f;
-	frame.ach_MACdst[3] = 0xff;
-	frame.ach_MACdst[4] = 0xff;
-	frame.ach_MACdst[5] = 0xff;
+        frame.ach_MACsrc[0] = 0x00;
+        frame.ach_MACsrc[1] = 0x0d;
+        frame.ach_MACsrc[2] = 0x3f;
+        frame.ach_MACsrc[3] = 0xff;
+        frame.ach_MACsrc[4] = 0xff;
+        frame.ach_MACsrc[5] = 0xff;
 
-	frame.ach_Length = 666;
+        frame.ach_Length = 666;
+        (void) strcpy(frame.ach_Payload,"DUAP");
+        (void) strcpy(frame.ach_crc,"42");
+
 	int du;
 	for(du=0;du<46;++du) {
 		frame.ach_Payload[du] = 0x00;
@@ -110,20 +115,22 @@ int main() {
 	unsigned char *text = (unsigned char*)&framecrc;
 	//unsigned char *text;
 	//text = "12345678";
-	/*
+	
 	for(i=0;i<sizeof(framecrc);++i) {
 		//printf("\"%03d\"",text[i]);
 		printf("%02X ",text[i]);
 	}
   	printf("\n");
-	*/
+	
 	for(i=0;i<sizeof(framecrc);++i) {
 		printf("%02d ", i);
 	}
 	printf("\n");
+	/*
 	printf("================\n");
 	printf("CRC32 of frame 3e5a60d0\n");
 	printf("CRC32 of frame %08x\n",crc32(text,sizeof(framecrc)));
+	*/
 	unsigned int checksum;
 	checksum = crc32(text,sizeof(framecrc));
 	printf("CRC32 of frame %08x\n",checksum);
@@ -134,10 +141,12 @@ int main() {
 	printf("Payload: %s\n", frame.ach_Payload);
 	printf("CRC: %s\n", frame.ach_crc);
 	printf("================\n");
+	/*
 	unsigned int x = 1046110416;//well, it should be just 1234.
 	unsigned char* pChars;
 	pChars = (unsigned char*) &x;
 	printf("%02x %02x %02x %02x\n", pChars[3],pChars[2],pChars[1],pChars[0]);
+	*/
 	/*
 	for(i=0;i<4;++i)
 	{
@@ -145,6 +154,7 @@ int main() {
 		printf("%02x %02x %02x %02x ", pChars[3],pChars[2],pChars[1],pChars[0]);
 		printf("%02x %02x %02x %02x\n", frame.ach_crc[0],frame.ach_crc[1],frame.ach_crc[2],frame.ach_crc[3]);
 	}*/
+	/*
 	frame.ach_crc[0]=pChars[3];
 	frame.ach_crc[1]=pChars[2];
 	frame.ach_crc[2]=pChars[1];
@@ -155,6 +165,7 @@ int main() {
 	printf("Length: %d\n", frame.ach_Length);
 	printf("Payload: %s\n", frame.ach_Payload);
 	printf("CRC: %02x%02x%02x%02x\n", frame.ach_crc[0],frame.ach_crc[1],frame.ach_crc[2],frame.ach_crc[3]);
+	*/
 	return(0);
 	
 }
