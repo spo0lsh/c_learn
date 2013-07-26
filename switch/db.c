@@ -29,7 +29,9 @@ int fn_hash(unsigned char ach_MAC[6]) { // HASH
 	int n_i;
 	int n_hash;
 	n_hash=0;
+	#ifdef DEBUG
 	printf("[HASH] %02x:%02x:%02x:%02x:%02x:%02x\n", ach_MAC[0], ach_MAC[1], ach_MAC[2], ach_MAC[3], ach_MAC[4], ach_MAC[5]);
+	#endif
 	for(n_i=0;n_i<6;++n_i) {
 		//#ifdef DEBUG
 		//printf("(%d * %d + %d ) %% %d = %d\n", PRIME, n_hash, (int)ach_MACsrc[i],HASH_TABLE,( PRIME * n_hash + (int)ach_MACsrc[i] ) % HASH_TABLE);
@@ -169,8 +171,6 @@ void fn_hash_show() {
 		printf("[%d]. ",n_i+1);
 		printf("%02x:%02x:%02x:%02x:%02x:%02x ", pas_HASH[n_i].ach_MACsrc[0], pas_HASH[n_i].ach_MACsrc[1], pas_HASH[n_i].ach_MACsrc[2], pas_HASH[n_i].ach_MACsrc[3], pas_HASH[n_i].ach_MACsrc[4], pas_HASH[n_i].ach_MACsrc[5]);
 		printf("%d, %d, %d\n", pas_HASH[n_i].n_Port, pas_HASH[n_i].n_Age, pas_HASH[n_i].n_Filter);
-		
-		
 	}
 }	
 /*
