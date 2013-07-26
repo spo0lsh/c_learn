@@ -9,7 +9,7 @@
 #include "recv.h"
 
 
-void fn_send(int n_i, SFrame *S_Frame) {
+void fn_send(int n_i, SFrame *ps_Frame) {
 	// 
 	int n_msqid;
 	int n_msgflg = IPC_CREAT | 0666;
@@ -32,7 +32,7 @@ void fn_send(int n_i, SFrame *S_Frame) {
 	#ifdef DEBUG
 	(void) fprintf(stderr,"msgget: msgget succeeded: msqid = %d\n", n_msqid);
 	#endif
-	memcpy(&(S_Sbuf.s_Frame), S_Frame, sizeof(SFrame));
+	memcpy(&(S_Sbuf.s_Frame), ps_Frame, sizeof(SFrame));
 	if (msgsnd(n_msqid, &S_Sbuf, sizeof(S_Sbuf.s_Frame), IPC_NOWAIT) < 0) {
 		#ifdef DEBUG
 		perror("msgsnd");
@@ -42,11 +42,11 @@ void fn_send(int n_i, SFrame *S_Frame) {
 	else {
 		#ifdef DEBUG			
 		printf("Message: Sent on bridgeport %d\n",n_i);
-		printf("[SEND] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", S_Frame->ach_MACdst[0], S_Frame->ach_MACdst[1], S_Frame->ach_MACdst[2], S_Frame->ach_MACdst[3], S_Frame->ach_MACdst[4], S_Frame->ach_MACdst[5]);
-		printf("[SEND] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", S_Frame->ach_MACsrc[0], S_Frame->ach_MACsrc[1], S_Frame->ach_MACsrc[2], S_Frame->ach_MACsrc[3], S_Frame->ach_MACsrc[4], S_Frame->ach_MACsrc[5]);
-		printf("[SEND] Length: %d\n", S_Frame->ach_Length);
-		printf("[SEND] Payload: %s\n", S_Frame->ach_Payload);
-		printf("[SEND] CRC: %02x%02x%02x%02x\n",S_Frame->ach_crc[0],S_Frame->ach_crc[1],S_Frame->ach_crc[2],S_Frame->ach_crc[3]);
+		printf("[SEND] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_Frame->ach_MACdst[0], ps_Frame->ach_MACdst[1], ps_Frame->ach_MACdst[2], ps_Frame->ach_MACdst[3], ps_Frame->ach_MACdst[4], ps_Frame->ach_MACdst[5]);
+		printf("[SEND] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_Frame->ach_MACsrc[0], ps_Frame->ach_MACsrc[1], ps_Frame->ach_MACsrc[2], ps_Frame->ach_MACsrc[3], ps_Frame->ach_MACsrc[4], ps_Frame->ach_MACsrc[5]);
+		printf("[SEND] Length: %d\n", ps_Frame->ach_Length);
+		printf("[SEND] Payload: %s\n", ps_Frame->ach_Payload);
+		printf("[SEND] CRC: %02x%02x%02x%02x\n",ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
 		#endif
 		//void();
 	}

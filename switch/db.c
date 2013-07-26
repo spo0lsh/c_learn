@@ -14,9 +14,9 @@ sHashTable *fn_create_hash() {
 	printf("Creating database\n");
 	printf("Size: %d\n", HASH_TABLE);
 	#endif
-	sHashTable *asHASH = (sHashTable *) malloc(sizeof(sHashTable) * HASH_TABLE);
+	sHashTable *pas_HASH = (sHashTable *) malloc(sizeof(sHashTable) * HASH_TABLE);
 	//sHashTable sHASH[HASH_TABLE];
-	return(asHASH);
+	return(pas_HASH);
 }
 
 void fn_destroy_hash(sHashTable * pa_HASH) {
@@ -42,22 +42,22 @@ int fn_hash(unsigned char ach_MAC[6]) { // HASH
 void fn_remove(int n_hash) { // status
 	#ifdef DEBUG
 	printf("[DB] before remove\n");
-	printf("%02x:%02x:%02x:%02x:%02x:%02x ", asHASH[n_hash].ach_MACsrc[0], asHASH[n_hash].ach_MACsrc[1], asHASH[n_hash].ach_MACsrc[2], asHASH[n_hash].ach_MACsrc[3], asHASH[n_hash].ach_MACsrc[4], asHASH[n_hash].ach_MACsrc[5]);
-	printf("%d, %d, %d\n", asHASH[n_hash].n_Port, asHASH[n_hash].n_Age, asHASH[n_hash].n_Filter);
+	printf("%02x:%02x:%02x:%02x:%02x:%02x ", pas_HASH[n_hash].ach_MACsrc[0], pas_HASH[n_hash].ach_MACsrc[1], pas_HASH[n_hash].ach_MACsrc[2], pas_HASH[n_hash].ach_MACsrc[3], pas_HASH[n_hash].ach_MACsrc[4], pas_HASH[n_hash].ach_MACsrc[5]);
+	printf("%d, %d, %d\n", pas_HASH[n_hash].n_Port, pas_HASH[n_hash].n_Age, pas_HASH[n_hash].n_Filter);
 	#endif
-	asHASH[n_hash].ach_MACsrc[0] = 0;
-	asHASH[n_hash].ach_MACsrc[1] = 0;
-	asHASH[n_hash].ach_MACsrc[2] = 0;
-	asHASH[n_hash].ach_MACsrc[3] = 0;
-	asHASH[n_hash].ach_MACsrc[4] = 0;
-	asHASH[n_hash].ach_MACsrc[5] = 0;
-	asHASH[n_hash].n_Port = 0;
-	asHASH[n_hash].n_Age = 0;
-	asHASH[n_hash].n_Filter = 0;
+	pas_HASH[n_hash].ach_MACsrc[0] = 0;
+	pas_HASH[n_hash].ach_MACsrc[1] = 0;
+	pas_HASH[n_hash].ach_MACsrc[2] = 0;
+	pas_HASH[n_hash].ach_MACsrc[3] = 0;
+	pas_HASH[n_hash].ach_MACsrc[4] = 0;
+	pas_HASH[n_hash].ach_MACsrc[5] = 0;
+	pas_HASH[n_hash].n_Port = 0;
+	pas_HASH[n_hash].n_Age = 0;
+	pas_HASH[n_hash].n_Filter = 0;
 	#ifdef DEBUG
 	printf("[DB] after remove\n");
-	printf("%02x:%02x:%02x:%02x:%02x:%02x ", asHASH[n_hash].ach_MACsrc[0], asHASH[n_hash].ach_MACsrc[1], asHASH[n_hash].ach_MACsrc[2], asHASH[n_hash].ach_MACsrc[3], asHASH[n_hash].ach_MACsrc[4], asHASH[n_hash].ach_MACsrc[5]);
-	printf("%d, %d, %d\n", asHASH[n_hash].n_Port, asHASH[n_hash].n_Age, asHASH[n_hash].n_Filter);
+	printf("%02x:%02x:%02x:%02x:%02x:%02x ", pas_HASH[n_hash].ach_MACsrc[0], pas_HASH[n_hash].ach_MACsrc[1], pas_HASH[n_hash].ach_MACsrc[2], pas_HASH[n_hash].ach_MACsrc[3], pas_HASH[n_hash].ach_MACsrc[4], pas_HASH[n_hash].ach_MACsrc[5]);
+	printf("%d, %d, %d\n", pas_HASH[n_hash].n_Port, pas_HASH[n_hash].n_Age, pas_HASH[n_hash].n_Filter);
 	#endif
 }
 
@@ -68,26 +68,26 @@ void fn_add_srcmac(unsigned char ach_MACsrc[6],int n_bridgeport,int n_filter) { 
 	printf("[DB] add %02x:%02x:%02x:%02x:%02x:%02x into %d port %d AGING %ld now: %ld\n", ach_MACsrc[0], ach_MACsrc[1], ach_MACsrc[2], ach_MACsrc[3], ach_MACsrc[4], ach_MACsrc[5],fn_hash(ach_MACsrc)+1,n_bridgeport,n_aging+now,now);
 	#endif
 	int hash = fn_hash(ach_MACsrc);
-	asHASH[hash].ach_MACsrc[0] = ach_MACsrc[0];
-	asHASH[hash].ach_MACsrc[1] = ach_MACsrc[1];
-	asHASH[hash].ach_MACsrc[2] = ach_MACsrc[2];
-	asHASH[hash].ach_MACsrc[3] = ach_MACsrc[3];
-	asHASH[hash].ach_MACsrc[4] = ach_MACsrc[4];
-	asHASH[hash].ach_MACsrc[5] = ach_MACsrc[5];
-	asHASH[hash].n_Port=n_bridgeport;
-	asHASH[hash].n_Age=n_aging+now;
-	asHASH[hash].n_Filter=n_filter;
+	pas_HASH[hash].ach_MACsrc[0] = ach_MACsrc[0];
+	pas_HASH[hash].ach_MACsrc[1] = ach_MACsrc[1];
+	pas_HASH[hash].ach_MACsrc[2] = ach_MACsrc[2];
+	pas_HASH[hash].ach_MACsrc[3] = ach_MACsrc[3];
+	pas_HASH[hash].ach_MACsrc[4] = ach_MACsrc[4];
+	pas_HASH[hash].ach_MACsrc[5] = ach_MACsrc[5];
+	pas_HASH[hash].n_Port=n_bridgeport;
+	pas_HASH[hash].n_Age=n_aging+now;
+	pas_HASH[hash].n_Filter=n_filter;
 }
 
 void fn_search_rm() { // 
 	int n_i;
-	time_t now;
-	time(&now);
+	time_t s_now;
+	time(&s_now);
 	#ifdef DEBUG
-	printf("Now is %ld\n", now);
+	printf("Now is %ld\n", s_now);
 	#endif
 	for(n_i=0;n_i<HASH_TABLE;n_i++) {
-		if(asHASH[n_i].n_Age < now && asHASH[n_i].n_Age  != 0 && asHASH[n_i].n_Filter != 1 ) {
+		if(pas_HASH[n_i].n_Age < s_now && pas_HASH[n_i].n_Age  != 0 && pas_HASH[n_i].n_Filter != 1 ) {
 			#ifdef DEBUG
 			printf("[DB]Removing hash %d\n",n_i);
 			#endif
@@ -95,7 +95,7 @@ void fn_search_rm() { //
 		}
 	}
 	#ifdef DEBUG
-	printf("Now is %ld\n", now);
+	printf("Now is %ld\n", s_now);
 	#endif
 }
 
@@ -113,7 +113,7 @@ void fn_readfile() { //
 	fp=NULL;
 	char * pch_line = NULL;
 	size_t len = 0;
-	ssize_t read;
+	ssize_t s_read;
 	int n_i;
 	n_i=0;
 	int ai_tmp[12];
@@ -123,10 +123,10 @@ void fn_readfile() { //
 	if (fp == NULL) {
         perror("Fail open configfile.txt");
     } else {
-		while ((read = getline(&pch_line, &len, fp)) != -1) {
+		while ((s_read = getline(&pch_line, &len, fp)) != -1) {
 			++n_i;
 			#ifdef DEBUG
-			printf("Retrieved line %d of length %zu :\n", n_i, read);
+			printf("Retrieved line %d of length %zu :\n", n_i, s_read);
 			#endif
 			if(n_i == 1) {
 				n_aging=atoi(pch_line);
@@ -167,8 +167,8 @@ void fn_hash_show() {
 	int n_i;
 	for(n_i=0;n_i<HASH_TABLE;++n_i) {
 		printf("[%d]. ",n_i+1);
-		printf("%02x:%02x:%02x:%02x:%02x:%02x ", asHASH[n_i].ach_MACsrc[0], asHASH[n_i].ach_MACsrc[1], asHASH[n_i].ach_MACsrc[2], asHASH[n_i].ach_MACsrc[3], asHASH[n_i].ach_MACsrc[4], asHASH[n_i].ach_MACsrc[5]);
-		printf("%d, %d, %d\n", asHASH[n_i].n_Port, asHASH[n_i].n_Age, asHASH[n_i].n_Filter);
+		printf("%02x:%02x:%02x:%02x:%02x:%02x ", pas_HASH[n_i].ach_MACsrc[0], pas_HASH[n_i].ach_MACsrc[1], pas_HASH[n_i].ach_MACsrc[2], pas_HASH[n_i].ach_MACsrc[3], pas_HASH[n_i].ach_MACsrc[4], pas_HASH[n_i].ach_MACsrc[5]);
+		printf("%d, %d, %d\n", pas_HASH[n_i].n_Port, pas_HASH[n_i].n_Age, pas_HASH[n_i].n_Filter);
 		
 		
 	}

@@ -9,7 +9,7 @@
 #include "crc.h"
 
 
-int fn_recv(int n_i,SFrame *s_Frame) {
+int fn_recv(int n_i,SFrame *ps_Frame) {
 	int n_msqid;
 	key_t key;
 	SMessage_buf S_Rbuf;
@@ -35,25 +35,25 @@ int fn_recv(int n_i,SFrame *s_Frame) {
         exit(1);
     }
 	//s_Frame = S_Rbuf.s_Frame;
-	memcpy((void *)s_Frame, (void *) &S_Rbuf.s_Frame, sizeof(SFrame));
+	memcpy((void *)ps_Frame, (void *) &S_Rbuf.s_Frame, sizeof(SFrame));
 	
 	#ifdef DEBUG
     /*
      * Print the answer.
      */
     printf("[RECV] on bridgeport %d\n", n_i);
-	printf("[RECV] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", s_Frame->ach_MACdst[0], s_Frame->ach_MACdst[1], s_Frame->ach_MACdst[2], s_Frame->ach_MACdst[3], s_Frame->ach_MACdst[4], s_Frame->ach_MACdst[5]);
-	printf("[RECV] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", s_Frame->ach_MACsrc[0], s_Frame->ach_MACsrc[1], s_Frame->ach_MACsrc[2], s_Frame->ach_MACsrc[3], s_Frame->ach_MACsrc[4], s_Frame->ach_MACsrc[5]);
-	printf("[RECV] Length: %d\n", s_Frame->ach_Length);
-	printf("[RECV] Payload: %s\n", s_Frame->ach_Payload);
-	printf("[RECV] CRC: %02x%02x%02x%02x\n",s_Frame->ach_crc[0],s_Frame->ach_crc[1],s_Frame->ach_crc[2],s_Frame->ach_crc[3]);
+	printf("[RECV] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_Frame->ach_MACdst[0], ps_Frame->ach_MACdst[1], ps_Frame->ach_MACdst[2], ps_Frame->ach_MACdst[3], ps_Frame->ach_MACdst[4], ps_Frame->ach_MACdst[5]);
+	printf("[RECV] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_Frame->ach_MACsrc[0], ps_Frame->ach_MACsrc[1], ps_Frame->ach_MACsrc[2], ps_Frame->ach_MACsrc[3], ps_Frame->ach_MACsrc[4], ps_Frame->ach_MACsrc[5]);
+	printf("[RECV] Length: %d\n", ps_Frame->ach_Length);
+	printf("[RECV] Payload: %s\n", ps_Frame->ach_Payload);
+	printf("[RECV] CRC: %02x%02x%02x%02x\n",ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
 	#endif /* DEBUG */
 
 	
 	/*
 	removing wrong crc
 	*/
-	if(fn_crc_frame(s_Frame)) {
+	if(fn_crc_frame(ps_Frame)) {
 		#ifdef DEBUG
 		printf("[CRC] PASS\n");
 		#endif /* DEBUG */

@@ -9,7 +9,7 @@ typedef struct {
 	int n_Filter;
 } sHashTable;
 
-sHashTable *asHASH;
+sHashTable *pas_HASH;
 int n_aging;
 sHashTable *fn_create_hash(); // return hash?
 void fn_destroy_hash(sHashTable *); // status?

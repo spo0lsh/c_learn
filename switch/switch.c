@@ -17,12 +17,12 @@
 #include <sys/msg.h>
 #include "src_dst_iface.h"
 
-sHashTable *asHASH;
+sHashTable *pas_HASH;
 int n_aging;
 
 int main() {
 	/* create database */
-	asHASH=fn_create_hash();
+	pas_HASH=fn_create_hash();
 	
 	/* reading file */
 	fn_readfile();
@@ -58,11 +58,11 @@ int main() {
 	scanf("%s",&ch_menu);
 	switch(ch_menu) {
 		case 'q':
-			fn_hash_show(asHASH);
+			fn_hash_show(pas_HASH);
 			printf("Quit\n");
 			/* remove interfaces */
 			fn_remove_interafaces();
-			fn_destroy_hash(asHASH);
+			fn_destroy_hash(pas_HASH);
 		break;
 	}
     return(EXIT_SUCCESS);
@@ -88,7 +88,7 @@ void fn_pthread_bridgeport(void * p_arg) {
 			fn_learn_or_refresh(*n_bridge,&s_Frame);
 			/* unicast broadcast multicast */
 			n_hash = fn_hash(s_Frame.ach_MACsrc);
-			if(asHASH[n_hash].n_Filter == 0) {
+			if(pas_HASH[n_hash].n_Filter == 0) {
 				n_flood=fn_unicast_broadcast_multicast(*n_bridge,&s_Frame);
 				/* flood */
 				if(n_flood) {
@@ -100,12 +100,12 @@ void fn_pthread_bridgeport(void * p_arg) {
 					n_hash=0;
 					n_hash = fn_hash(s_Frame.ach_MACdst);
 					#ifdef DEBUG
-					printf("[flood] unicast to port %d hash %d\n",asHASH[n_hash].n_Port,n_hash+1);
+					printf("[flood] unicast to port %d hash %d\n",pas_HASH[n_hash].n_Port,n_hash+1);
 					#endif
 					/* source destination + filter */
-					if(fn_src_dst_iface(*n_bridge, asHASH[n_hash].n_Port) && asHASH[n_hash].n_Port < SWITCH+1) {
+					if(fn_src_dst_iface(*n_bridge, pas_HASH[n_hash].n_Port) && pas_HASH[n_hash].n_Port < SWITCH+1) {
 						/* send frame */
-						fn_send(asHASH[n_hash].n_Port,&s_Frame);
+						fn_send(pas_HASH[n_hash].n_Port,&s_Frame);
 					}
 				}
 			} else {
