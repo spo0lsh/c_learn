@@ -4,6 +4,7 @@
 #include "aging.h"
 #include "db.h"
 
+/* learn or refresh */
 void fn_learn_or_refresh(int n_bridgeport, SFrame *ps_frame) {
 	int n_hash;
 	#ifdef DEBUG
@@ -16,7 +17,7 @@ void fn_learn_or_refresh(int n_bridgeport, SFrame *ps_frame) {
 	#endif
 	n_hash=0;
 	n_hash = fn_hash(ps_frame->ach_MACsrc);
-	if(pas_HASH[n_hash].n_Filter == 0) {
+	if(pas_HASH[n_hash].n_Filter == 0) { // if dynamic
 		#ifdef DEBUG
 		printf("[LEARN] add SRC: %02x:%02x:%02x:%02x:%02x:%02x iface: %d aging: %d HASH: %d\n",ps_frame->ach_MACsrc[0], ps_frame->ach_MACsrc[1], ps_frame->ach_MACsrc[2], ps_frame->ach_MACsrc[3], ps_frame->ach_MACsrc[4], ps_frame->ach_MACsrc[5],n_bridgeport,n_aging,fn_hash(ps_frame->ach_MACsrc)+1 );
 		#endif

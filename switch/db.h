@@ -17,7 +17,7 @@ int fn_hash(unsigned char[6]); // HASH
 void fn_remove(int); // status
 void fn_add_srcmac(unsigned char *,int,int ); // status
 void fn_search_rm(); // 
-void fn_entry(); // single entry
+//void fn_entry(); // single entry
 void fn_readfile(); //
 //void fn_hash_show(sHashTable *); // show mac table
 void fn_hash_show(); // show mac table

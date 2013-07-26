@@ -17,6 +17,19 @@
 #include <sys/msg.h>
 #include "src_dst_iface.h"
 
+
+/*
+ * Author: Krzysztof Krych
+ * email: krzysztof.krych@tieto.com
+ * version: stable ;)
+ * 
+ * Frame structure
+ * 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ... 45
+      dstmac        |      srcmac     | length    |   payload
+         6 byte     |      6 byte     | 4 byte(*) |   payload -> static -> up to 45
+         * - in x86 GCC
+*/
+
 sHashTable *pas_HASH;
 int n_aging;
 
@@ -58,16 +71,19 @@ int main() {
 	scanf("%s",&ch_menu);
 	switch(ch_menu) {
 		case 'q':
+			// show hash table (should be in indef?)
 			fn_hash_show(pas_HASH);
 			printf("Quit\n");
 			/* remove interfaces */
 			fn_remove_interafaces();
+			// destroy hash
 			fn_destroy_hash(pas_HASH);
 		break;
 	}
     return(EXIT_SUCCESS);
 }
 
+// bridgeport thread
 void fn_pthread_bridgeport(void * p_arg) {
 	int *n_bridge;
 	int n_flood; // flood or unicast
@@ -80,16 +96,17 @@ void fn_pthread_bridgeport(void * p_arg) {
 	printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
 	#endif
 	SFrame s_Frame;
+	//infinity loop - reading from MQ
 	while(1) {
 		/* recv frame */
-		n_crc=fn_recv(*n_bridge,&s_Frame);
+		n_crc=fn_recv(*n_bridge,&s_Frame); // if CRC is ok -> true
 		if(n_crc) {
 			/* learn or refresh */
-			fn_learn_or_refresh(*n_bridge,&s_Frame);
+			fn_learn_or_refresh(*n_bridge,&s_Frame); //adding entry to DB
 			/* unicast broadcast multicast */
-			n_hash = fn_hash(s_Frame.ach_MACsrc);
-			if(pas_HASH[n_hash].n_Filter == 0) {
-				n_flood=fn_unicast_broadcast_multicast(*n_bridge,&s_Frame);
+			n_hash = fn_hash(s_Frame.ach_MACsrc); // calc hash key
+			if(pas_HASH[n_hash].n_Filter == 0) { // if dynamic entry -> probably bug ;)
+				n_flood=fn_unicast_broadcast_multicast(*n_bridge,&s_Frame); // TRUE if flooding, FALSE if unicast
 				/* flood */
 				if(n_flood) {
 					#ifdef DEBUG
@@ -103,7 +120,7 @@ void fn_pthread_bridgeport(void * p_arg) {
 					printf("[flood] unicast to port %d hash %d\n",pas_HASH[n_hash].n_Port,n_hash+1);
 					#endif
 					/* source destination + filter */
-					if(fn_src_dst_iface(*n_bridge, pas_HASH[n_hash].n_Port) && pas_HASH[n_hash].n_Port < SWITCH+1) {
+					if(fn_src_dst_iface(*n_bridge, pas_HASH[n_hash].n_Port) && pas_HASH[n_hash].n_Port < SWITCH+1) { // TRUE if not on the same iface and not filtering
 						/* send frame */
 						fn_send(pas_HASH[n_hash].n_Port,&s_Frame);
 					}
@@ -123,11 +140,12 @@ void fn_pthread_bridgeport(void * p_arg) {
 	pthread_exit(0); /* exit */
 }
 
-
+/* aging procedure */
 void fn_pthread_aging(void *arg) {
 	#ifdef DEBUG
 	printf("fn_pthread_aging\n");
 	#endif
+	//infinity loop
 	while(1) {
 		#ifdef DEBUG
 		printf("Starting aging procedure ...\n");
@@ -137,7 +155,7 @@ void fn_pthread_aging(void *arg) {
 	}
 	pthread_exit(0); /* exit */
 }
-
+/* generate MQ as pseudo interface */
 void fn_generate_interafaces() {
 	int n_i;
 	#ifdef DEBUG
@@ -145,10 +163,11 @@ void fn_generate_interafaces() {
 	#endif
 	key_t key; /* key to be passed to msgget() */ 
 	int msqid; /* return value from msgget() */
-	int msgflg = IPC_CREAT | 0666;
+	int msgflg = IPC_CREAT | 0666; // set correct access
+	//create input
 	for(n_i=0;n_i<SWITCH;++n_i) {
 		key = MSQKEYRECV + n_i + 1; // recv
-		if ((msqid = msgget(key, msgflg )) < 0) {
+		if ((msqid = msgget(key, msgflg )) < 0) { //
 			#ifdef DEBUG
 			perror("msgget");
 			#endif
@@ -160,6 +179,7 @@ void fn_generate_interafaces() {
 		}
 		#endif
 	}
+	//create output
 	for(n_i=0;n_i<SWITCH;++n_i) {
 		key = MSQKEYSEND + n_i + 1; // send
 		if ((msqid = msgget(key, msgflg )) < 0) {
@@ -176,13 +196,16 @@ void fn_generate_interafaces() {
 	}
 
 }
+
+/* remove pseudo interfaces */
 void fn_remove_interafaces() {
 	int n_i;
 	key_t key; /* key to be passed to msgget() */ 
-	int msgflg = IPC_CREAT | 0666;
+	int msgflg = IPC_CREAT | 0666; // need this for IPC_RMID
 	#ifdef DEBUG
 	printf("Removing bridgeport pseudo interfaces\n");
 	#endif
+	// remove input
 	for(n_i=0;n_i<SWITCH;++n_i) {
 		key = MSQKEYRECV + n_i + 1; // recv
 		#ifdef DEBUG
@@ -195,6 +218,7 @@ void fn_remove_interafaces() {
 	//        exit(1);
 		}
 	}
+	// remove outpu
 	for(n_i=0;n_i<SWITCH;++n_i) {
 		key = MSQKEYSEND + n_i + 1; // recv
 		#ifdef DEBUG

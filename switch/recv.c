@@ -8,7 +8,7 @@
 #include <sys/msg.h>
 #include "crc.h"
 
-
+/* recive frame from MQ */
 int fn_recv(int n_i,SFrame *ps_Frame) {
 	int n_msqid;
 	key_t key;
@@ -18,7 +18,7 @@ int fn_recv(int n_i,SFrame *ps_Frame) {
     #ifdef DEBUG
 	printf("%d %d\n", key,n_i );
 	#endif
-    if ((n_msqid = msgget(key, 0666)) < 0) {
+    if ((n_msqid = msgget(key, 0666)) < 0) { // exit if fail read
 		#ifdef DEBUG
         perror("msgget");
         #endif
@@ -28,14 +28,14 @@ int fn_recv(int n_i,SFrame *ps_Frame) {
     /*
      * Receive an answer of message type 1.
      */
-    if (msgrcv(n_msqid, &S_Rbuf, sizeof(S_Rbuf.s_Frame), 1, 0) < 0) {
+    if (msgrcv(n_msqid, &S_Rbuf, sizeof(S_Rbuf.s_Frame), 1, 0) < 0) { // exit if fail read
 		#ifdef DEBUG
         perror("msgrcv");
         #endif
         exit(1);
     }
 	//s_Frame = S_Rbuf.s_Frame;
-	memcpy((void *)ps_Frame, (void *) &S_Rbuf.s_Frame, sizeof(SFrame));
+	memcpy((void *)ps_Frame, (void *) &S_Rbuf.s_Frame, sizeof(SFrame)); // copy frame from MQ struct
 	
 	#ifdef DEBUG
     /*
@@ -53,7 +53,7 @@ int fn_recv(int n_i,SFrame *ps_Frame) {
 	/*
 	removing wrong crc
 	*/
-	if(fn_crc_frame(ps_Frame)) {
+	if(fn_crc_frame(ps_Frame)) { // if TRUE CRC is ok
 		#ifdef DEBUG
 		printf("[CRC] PASS\n");
 		#endif /* DEBUG */

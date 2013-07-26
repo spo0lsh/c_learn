@@ -1,6 +1,7 @@
 #ifndef __crc_H
 #define __crc_H
 
+// googled -> struture in a continuous memory
 #pragma pack(1)
 typedef struct {
 	unsigned char ach_MACdst[6];
