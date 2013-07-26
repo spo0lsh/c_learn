@@ -43,46 +43,49 @@ unsigned int fn_crc32(unsigned char * pch_message,int n_size) {
 }
 
 int fn_crc_frame(SFrame *ps_Frame) {
+	int n_i;
+	unsigned char *pch_text;
+	unsigned int n_x;
+	unsigned char* pChars;
+	
 	#ifdef DEBUG
 	printf("[crc] got MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_Frame->ach_MACdst[0], ps_Frame->ach_MACdst[1], ps_Frame->ach_MACdst[2], ps_Frame->ach_MACdst[3], ps_Frame->ach_MACdst[4], ps_Frame->ach_MACdst[5]);
 	printf("[crc] got MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", ps_Frame->ach_MACsrc[0], ps_Frame->ach_MACsrc[1], ps_Frame->ach_MACsrc[2], ps_Frame->ach_MACsrc[3], ps_Frame->ach_MACsrc[4], ps_Frame->ach_MACsrc[5]);
 	printf("[crc] got Length: %d\n", ps_Frame->ach_Length);
 	printf("[crc] got Payload: %s\n", ps_Frame->ach_Payload);
 	#endif
-	SFrameCRC framecrc;
-	int n_i;
+	SFrameCRC s_framecrc;
 	
 	for(n_i=0;n_i<46;++n_i) {
-		framecrc.ach_Payload[n_i] = 0x00;
+		s_framecrc.ach_Payload[n_i] = 0x00;
 	}
 	/* przepisywanie */
 	for(n_i=0;n_i<6;++n_i) {
-		framecrc.ach_MACdst[n_i] = ps_Frame->ach_MACdst[n_i];
-		framecrc.ach_MACsrc[n_i] = ps_Frame->ach_MACsrc[n_i];
+		s_framecrc.ach_MACdst[n_i] = ps_Frame->ach_MACdst[n_i];
+		s_framecrc.ach_MACsrc[n_i] = ps_Frame->ach_MACsrc[n_i];
 	}
-	framecrc.ach_Length  = ps_Frame->ach_Length;
-	strcpy(framecrc.ach_Payload, ps_Frame->ach_Payload);
+	s_framecrc.ach_Length  = ps_Frame->ach_Length;
+	strcpy(s_framecrc.ach_Payload, ps_Frame->ach_Payload);
 	#ifdef DEBUG
-	printf("[crc] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", framecrc.ach_MACdst[0], framecrc.ach_MACdst[1], framecrc.ach_MACdst[2], framecrc.ach_MACdst[3], framecrc.ach_MACdst[4], framecrc.ach_MACdst[5]);
-	printf("[crc] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", framecrc.ach_MACsrc[0], framecrc.ach_MACsrc[1], framecrc.ach_MACsrc[2], framecrc.ach_MACsrc[3], framecrc.ach_MACsrc[4], framecrc.ach_MACsrc[5]);
-	printf("[crc] Length: %d\n", framecrc.ach_Length);
-	printf("[crc] Payload: %s\n", framecrc.ach_Payload);
+	printf("[crc] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n", s_framecrc.ach_MACdst[0], s_framecrc.ach_MACdst[1], s_framecrc.ach_MACdst[2], s_framecrc.ach_MACdst[3], s_framecrc.ach_MACdst[4], s_framecrc.ach_MACdst[5]);
+	printf("[crc] MACsrc: %02x:%02x:%02x:%02x:%02x:%02x\n", s_framecrc.ach_MACsrc[0], s_framecrc.ach_MACsrc[1], s_framecrc.ach_MACsrc[2], s_framecrc.ach_MACsrc[3], s_framecrc.ach_MACsrc[4], s_framecrc.ach_MACsrc[5]);
+	printf("[crc] Length: %d\n", s_framecrc.ach_Length);
+	printf("[crc] Payload: %s\n", s_framecrc.ach_Payload);
 	#endif
-	unsigned char *text; // poprawic
-	text = (unsigned char*)&framecrc; // poprawic
+
+	pch_text = (unsigned char*)&s_framecrc; // poprawic
 	#ifdef DEBUG
 	printf("[crc] ");
-	for(n_i=0;n_i<sizeof(framecrc);++n_i) {
-		printf("%02X ",text[n_i]);
+	for(n_i=0;n_i<sizeof(s_framecrc);++n_i) {
+		printf("%02X ",pch_text[n_i]);
 	}
 	printf("\n");
 	#endif
-	unsigned int n_x = fn_crc32(text,sizeof(framecrc));  // poprawic
-	unsigned char* pChars;  // poprawic
+	n_x = fn_crc32(pch_text,sizeof(s_framecrc));
 	pChars = (unsigned char*) &n_x;
 	#ifdef DEBUG
 	//printf("TO FRAME: %02x %02x %02x %02x\n", pChars[3],pChars[2],pChars[1],pChars[0]);	
-	printf("[crc] CRC32 of frame shouldbe %08x\n",fn_crc32(text,sizeof(framecrc)));
+	printf("[crc] CRC32 of frame shouldbe %08x\n",fn_crc32(pch_text,sizeof(s_framecrc)));
 	printf("[crc] CRC of frame is %02x%02x%02x%02x\n",ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
 	/*
 	printf("[crc] %d == %d\n",ps_Frame->ach_crc[0],pChars[3]);
@@ -94,12 +97,12 @@ int fn_crc_frame(SFrame *ps_Frame) {
 
 	if(ps_Frame->ach_crc[0] == pChars[3] && ps_Frame->ach_crc[1] == pChars[2] && ps_Frame->ach_crc[2] == pChars[1] && ps_Frame->ach_crc[3] == pChars[0]) {
 		#ifdef DEBUG
-		printf("%08x == %02x%02x%02x%02x\n",fn_crc32(text,sizeof(framecrc)),ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
+		printf("%08x == %02x%02x%02x%02x\n",fn_crc32(pch_text,sizeof(s_framecrc)),ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
 		#endif
 		return(1);
 	} else {
 		#ifdef DEBUG
-		printf("%08x != %02x%02x%02x%02x\n",fn_crc32(text,sizeof(framecrc)),ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
+		printf("%08x != %02x%02x%02x%02x\n",fn_crc32(pch_text,sizeof(s_framecrc)),ps_Frame->ach_crc[0],ps_Frame->ach_crc[1],ps_Frame->ach_crc[2],ps_Frame->ach_crc[3]);
 		#endif
 		return(0);
 	}
