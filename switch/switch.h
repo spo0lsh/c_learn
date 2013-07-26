@@ -27,8 +27,8 @@ typedef struct {
 	unsigned int n_IFACEsrc;
 } sIFACES;
 
-void fn_pthread_bridgeport(void *arg);
-void fn_pthread_aging(void *arg);
+void fn_pthread_bridgeport(void *);
+void fn_pthread_aging(void *);
 void fn_generate_interafaces();
 void fn_remove_interafaces();
 #endif /* __switch_H */

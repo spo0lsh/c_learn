@@ -21,5 +21,6 @@ void fn_entry(); // single entry
 void fn_readfile(); //
 //void fn_hash_show(sHashTable *); // show mac table
 void fn_hash_show(); // show mac table
+void fn_mac_show(); // show mac table without empty
 
 #endif /* __db_H */
