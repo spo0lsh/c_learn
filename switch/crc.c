@@ -5,7 +5,7 @@
 
 
 
-unsigned reverse(unsigned x) {
+unsigned fn_reverse(unsigned x) {
    x = ((x & 0x55555555) <<  1) | ((x >>  1) & 0x55555555);
    x = ((x & 0x33333333) <<  2) | ((x >>  2) & 0x33333333);
    x = ((x & 0x0F0F0F0F) <<  4) | ((x >>  4) & 0x0F0F0F0F);
@@ -13,29 +13,33 @@ unsigned reverse(unsigned x) {
    return x;
 }
 
-unsigned int fn_crc32(unsigned char *message,int size) {
-   int i, j;
-   unsigned int byte, crc;
+unsigned int fn_crc32(unsigned char * pch_message,int n_size) {
+	int n_i;
+	int n_j;
+	unsigned int n_byte;
+	unsigned int n_crc;
 
-   i = 0;
-   j=0;
-   crc = 0xFFFFFFFF;
-   byte=0;
-   for(i=0;i<size;++i) {
-      byte = message[i];            // Get next byte.
-      byte = reverse(byte);         // 32-bit reversal.
-      for (j = 0; j <= 7; j++) {    // Do eight times.
-         if ((int)(crc ^ byte) < 0)
-              crc = (crc << 1) ^ 0x04C11DB7;
-         else crc = crc << 1;
-         byte = byte << 1;          // Ready next msg bit.
-      }
-      i = i + 1;
-   }
-   #ifdef DEBUG
-   printf("cal: %08x %d\n",reverse(~crc),reverse(~crc));
-   #endif
-   return reverse(~crc);
+	n_i=0;
+	n_j=0;
+	n_crc=0xFFFFFFFF;
+	n_byte=0;
+	for(n_i=0;n_i<n_size;++n_i) {
+		n_byte = pch_message[n_i];            // Get next byte.
+		n_byte = fn_reverse(n_byte);         // 32-bit reversal.
+	for (n_j=0; n_j <= 7; n_j++) {    // Do eight times.
+		if ((int)(n_crc ^ n_byte) < 0) {
+			n_crc = (n_crc << 1) ^ 0x04C11DB7;
+		} else {
+			n_crc = n_crc << 1;
+		}
+		n_byte = n_byte << 1;          // Ready next msg bit.
+	}
+	n_i = n_i + 1;
+	}
+	#ifdef DEBUG
+	printf("cal: %08x %d\n",fn_reverse(~n_crc),fn_reverse(~n_crc));
+	#endif
+	return fn_reverse(~n_crc);
 }
 
 int fn_crc_frame(SFrame *ps_Frame) {
