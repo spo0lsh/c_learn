@@ -28,12 +28,18 @@ int fn_unicast_broadcast_multicast(int n_bridgeport, SFrame *ps_Frame) {
 		printf("[U_BR_MC] unicast\n");
 		#endif
 		n_hash = fn_hash(ps_Frame->ach_MACdst);
+		#ifdef DEBUG
 		printf("[U_BR_MC] hash %d\n",n_hash+1);
+		#endif
 		if(pas_HASH[n_hash].n_Port == 0 ) {
-			printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x\n not found!\n", ps_Frame->ach_MACdst[0], ps_Frame->ach_MACdst[1], ps_Frame->ach_MACdst[2], ps_Frame->ach_MACdst[3], ps_Frame->ach_MACdst[4], ps_Frame->ach_MACdst[5]);
+			#ifdef DEBUG
+			printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x not found!\n", ps_Frame->ach_MACdst[0], ps_Frame->ach_MACdst[1], ps_Frame->ach_MACdst[2], ps_Frame->ach_MACdst[3], ps_Frame->ach_MACdst[4], ps_Frame->ach_MACdst[5]);
+			#endif
 			return 1;
 		} else {
+			#ifdef DEBUG
 			printf("[U_BR_MC] MACdst: %02x:%02x:%02x:%02x:%02x:%02x found on port %d\n", ps_Frame->ach_MACdst[0], ps_Frame->ach_MACdst[1], ps_Frame->ach_MACdst[2], ps_Frame->ach_MACdst[3], ps_Frame->ach_MACdst[4], ps_Frame->ach_MACdst[5],pas_HASH[n_hash].n_Port);
+			#endif
 			return 0;
 		}
 		
