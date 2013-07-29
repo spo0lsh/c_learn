@@ -44,7 +44,7 @@ int fn_hash(unsigned char ach_MAC[6]) { // HASH
 		//#ifdef DEBUG
 		//printf("(%d * %d + %d ) %% %d = %d\n", PRIME, n_hash, (int)ach_MACsrc[i],HASH_TABLE,( PRIME * n_hash + (int)ach_MACsrc[i] ) % HASH_TABLE);
 		//#endif
-		n_hash = (PRIME * n_hash + (int)ach_MAC[n_i] ) % HASH_TABLE; // magic formula -> googled!
+		n_hash = (PRIME * n_hash + (int)ach_MAC[n_i] ) % HASH_TABLE; // magic formula -> googled! http://algs4.cs.princeton.edu/34hash/
 	}
 	return n_hash;
 }
