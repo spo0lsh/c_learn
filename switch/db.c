@@ -146,7 +146,9 @@ void fn_readfile() { //
 			#endif
 			if(n_i == 1) { // first line -> aging -> probably BUG
 				n_aging=atoi(pch_line);
+				#ifdef DEBUG
 				printf("[FIRST] %s", pch_line);
+				#endif
 			} else {
 				printf("%s", pch_line);
 				if(pch_line[0] != '\n' ) {

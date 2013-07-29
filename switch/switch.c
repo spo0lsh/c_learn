@@ -126,17 +126,18 @@ void fn_pthread_bridgeport(void * p_arg) {
 			/* unicast broadcast multicast */
 			n_hash = fn_hash(s_Frame.ach_MACsrc); // calc hash key
 			// no forward broadcast/unicast or filter frame
+			printf("{DUP}n_Port %d < SWITCH %d\n", pas_HASH[n_hash].n_Port,SWITCH+1);
 			if(pas_HASH[n_hash].n_Port < SWITCH+1) {
 				n_forward=1;
-			} else {
-				n_forward=1;
-			}
-			if((s_Frame.ach_MACsrc[0] % 2 ) == 0) {
-				n_forward=1;
+				if((s_Frame.ach_MACsrc[0] % 2 ) == 0) {
+					n_forward=1;
+				} else {
+					n_forward=0;
+				}
 			} else {
 				n_forward=0;
 			}
-			if(n_forward) {
+				if(n_forward) {
 				/* learn or refresh */
 				fn_learn_or_refresh(*n_bridge,&s_Frame); //adding entry to DB
 
