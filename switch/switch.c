@@ -66,19 +66,40 @@ int main() {
 		abort();
 	}
 	/* Waiting for finish by user */
-	printf("q [enter] - quit\n");
 	char ch_menu;
+	while(1) {
+	printf("p [enter] - print without empty\n");
+	printf("a [enter] - print all\n");
+	printf("r [enter] - reload config file\n");
+	printf("q [enter] - quit\n");
 	scanf("%s",&ch_menu);
-	switch(ch_menu) {
-		case 'q':
-			// show hash table (should be in indef?)
-			fn_hash_show(pas_HASH);
-			printf("Quit\n");
-			/* remove interfaces */
-			fn_remove_interafaces();
-			// destroy hash
-			fn_destroy_hash(pas_HASH);
-		break;
+		switch(ch_menu) {
+			case 'p':
+				printf("MAC table: \n");
+				fn_mac_show();
+			break;
+			case 'a':
+				printf("MAC table: \n");
+				fn_hash_show();
+			break;
+			case 'r':
+				printf("Reload configfile\n");
+				for(n_i=0;n_i<HASH_TABLE;n_i++) { // all DB
+					fn_remove(n_i);
+				}
+				fn_readfile();
+			break;
+			case 'q':
+				// show hash table (should be in indef?)
+				fn_hash_show(pas_HASH);
+				printf("Quit\n");
+				/* remove interfaces */
+				fn_remove_interafaces();
+				// destroy hash
+				fn_destroy_hash(pas_HASH);
+				return(EXIT_SUCCESS);
+			break;
+		}
 	}
     return(EXIT_SUCCESS);
 }
@@ -86,8 +107,9 @@ int main() {
 // bridgeport thread
 void fn_pthread_bridgeport(void * p_arg) {
 	int *n_bridge;
-	int n_flood; // flood or unicast
-	int n_crc; // crc
+	int n_forward; //
+	int n_flood;  // flood or unicast
+	int n_crc;   // crc
 	int n_hash;
 	if(NULL != p_arg) {
 		n_bridge = (int *) p_arg;
@@ -101,11 +123,23 @@ void fn_pthread_bridgeport(void * p_arg) {
 		/* recv frame */
 		n_crc=fn_recv(*n_bridge,&s_Frame); // if CRC is ok -> true
 		if(n_crc) {
-			/* learn or refresh */
-			fn_learn_or_refresh(*n_bridge,&s_Frame); //adding entry to DB
 			/* unicast broadcast multicast */
 			n_hash = fn_hash(s_Frame.ach_MACsrc); // calc hash key
-			if(pas_HASH[n_hash].n_Filter == 0) { // if dynamic entry -> probably bug ;)
+			// no forward broadcast/unicast or filter frame
+			if(pas_HASH[n_hash].n_Port < SWITCH+1) {
+				n_forward=1;
+			} else {
+				n_forward=1;
+			}
+			if((s_Frame.ach_MACsrc[0] % 2 ) == 0) {
+				n_forward=1;
+			} else {
+				n_forward=0;
+			}
+			if(n_forward) {
+				/* learn or refresh */
+				fn_learn_or_refresh(*n_bridge,&s_Frame); //adding entry to DB
+
 				n_flood=fn_unicast_broadcast_multicast(*n_bridge,&s_Frame); // TRUE if flooding, FALSE if unicast
 				/* flood */
 				if(n_flood) {
@@ -133,7 +167,7 @@ void fn_pthread_bridgeport(void * p_arg) {
 		} 
 		#ifdef DEBUG
 		else {
-			printf("Removing wrong CRC frame\n");
+			printf("Removing wrong CRC frame or removing multicast broadcast frame\n");
 		}
 		#endif
 	}

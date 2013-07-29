@@ -20,6 +20,7 @@ int fn_recv(int n_i,SFrame *ps_Frame) {
 	#endif
     if ((n_msqid = msgget(key, 0666)) < 0) { // exit if fail read
 		#ifdef DEBUG
+		printf("key = %d\n",key);
         perror("msgget");
         #endif
         exit(1);
