@@ -9,5 +9,7 @@ void fn_aging() {
 	printf("Aging procedure ... %d\n", n_aging);
 	#endif
 	fn_search_rm(); // remove expired 
+	#ifdef DEBUG
 	fn_mac_show(); // show mac table (without empty) -> only in debug?
+	#endif
 }

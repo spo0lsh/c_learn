@@ -16,6 +16,9 @@ void fn_send(int n_i, SFrame *ps_Frame) {
 	key_t key;
 	SMessage_buf S_Sbuf; // struct for MQ
 	key = MSQKEYSEND + n_i; // send key -> bridgeport in MQ
+	#ifdef DEBUG
+	printf("[SEND] key = %d\n", key);
+	#endif
     if ((n_msqid = msgget(key, n_msgflg )) < 0) { // if fail write to MQ -> exit; BUG?
 		#ifdef DEBUG
         perror("msgget");

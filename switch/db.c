@@ -150,7 +150,9 @@ void fn_readfile() { //
 				printf("[FIRST] %s", pch_line);
 				#endif
 			} else {
+				#ifdef DEBUG
 				printf("%s", pch_line);
+				#endif
 				if(pch_line[0] != '\n' ) {
 					for(n_i=0;n_i<12;++n_i) { // read mac -> probably bug
 						if(pch_line[n_i] < 97 ) { // only lower case and numbers
@@ -185,19 +187,16 @@ void fn_readfile() { //
 /* show all mac table (including empty) */
 void fn_hash_show() { // 
 	int n_i;
-	#ifdef DEBUG
 	for(n_i=0;n_i<HASH_TABLE;++n_i) { // all DB
 		printf("[%d]. ",n_i+1);
 		printf("%02x:%02x:%02x:%02x:%02x:%02x ", pas_HASH[n_i].ach_MACsrc[0], pas_HASH[n_i].ach_MACsrc[1], pas_HASH[n_i].ach_MACsrc[2], pas_HASH[n_i].ach_MACsrc[3], pas_HASH[n_i].ach_MACsrc[4], pas_HASH[n_i].ach_MACsrc[5]);
 		printf("%d, %d, %d\n", pas_HASH[n_i].n_Port, pas_HASH[n_i].n_Age, pas_HASH[n_i].n_Filter);
 	}
-	#endif
 }
 
 /* show mac table without empty */
 void fn_mac_show() { // show mac table without empty
 	int n_i;
-	#ifdef DEBUG
 	for(n_i=0;n_i<HASH_TABLE;++n_i) {
 		if(pas_HASH[n_i].n_Age != 0 ) {
 			printf("[DB AGING] [%d]. ",n_i+1);
@@ -205,6 +204,4 @@ void fn_mac_show() { // show mac table without empty
 			printf("%d, %d, %d\n", pas_HASH[n_i].n_Port, pas_HASH[n_i].n_Age, pas_HASH[n_i].n_Filter);
 		}
 	}
-	#endif
-
 }
