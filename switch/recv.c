@@ -13,13 +13,10 @@ int fn_recv(int n_i,SFrame *ps_Frame) {
 	int n_msqid;
 	key_t key;
 	SMessage_buf S_Rbuf;
-    key = MSQKEYRECV + n_i;
-	if(n_i == 0) {
-		#ifdef DEBUG
-		printf("[RECV] something wrong, key = 	%d\n",key);
-		#endif
+	if(n_i == 0) { // hack
 		n_i=n_i + 1;
 	}
+    key = MSQKEYRECV + n_i;
     #ifdef DEBUG
 	printf("%d %d\n", key,n_i );
 	#endif

@@ -80,6 +80,9 @@ void fn_add_srcmac(unsigned char ach_MACsrc[6],int n_bridgeport,int n_filter) { 
 	printf("[DB] add %02x:%02x:%02x:%02x:%02x:%02x into %d port %d AGING %ld now: %ld\n", ach_MACsrc[0], ach_MACsrc[1], ach_MACsrc[2], ach_MACsrc[3], ach_MACsrc[4], ach_MACsrc[5],fn_hash(ach_MACsrc)+1,n_bridgeport,n_aging+now,now);
 	#endif
 	int hash = fn_hash(ach_MACsrc);
+	if(n_bridgeport == 0) { // hack -> problem with bridgeport 0
+		n_bridgeport=1;
+	}
 	// writing in correct address
 	pas_HASH[hash].ach_MACsrc[0] = ach_MACsrc[0];
 	pas_HASH[hash].ach_MACsrc[1] = ach_MACsrc[1];

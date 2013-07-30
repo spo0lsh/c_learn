@@ -5,7 +5,7 @@
 #define MAC 16 // mac table = SWITCH * MAC
 #define HASH_TABLE (SWITCH * MAC) // mac table = SWITCH * MAC
 #define MSQKEYRECV 1000 // key for MQ recv
-#define MSQKEYSEND 1100 // key for MQ send
+#define MSQKEYSEND 1300 // key for MQ send
 
 typedef struct {
 	unsigned char ach_MACdst[6];
@@ -28,6 +28,7 @@ typedef struct {
 } sIFACES;
 
 void fn_pthread_bridgeport(void *);
+//void fn_pthread_bridgeport(int *);
 void fn_pthread_aging(void *);
 void fn_generate_interafaces();
 void fn_remove_interafaces();

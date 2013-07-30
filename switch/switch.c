@@ -58,6 +58,7 @@ int main() {
 			#endif
 			abort();
 		}
+		sleep(1); // hack -> need?
 	}
 	if ( pthread_create( &pthread_aging, NULL, (void *) &fn_pthread_aging, NULL) ) {
 		#ifdef DEBUG
@@ -112,7 +113,7 @@ void fn_pthread_bridgeport(void * p_arg) {
 	int n_crc;   // crc
 	int n_hash;
 	if(NULL != p_arg) {
-		n_bridge = (int *) p_arg;
+		n_bridge = (int*) p_arg;
 	}
 	#ifdef DEBUG
 	printf("fn_pthread_bridgeport number %d!\n", *n_bridge);
@@ -121,6 +122,10 @@ void fn_pthread_bridgeport(void * p_arg) {
 	//infinity loop - reading from MQ
 	while(1) {
 		/* recv frame */
+		if(*n_bridge == 0 ) { // problem with bridgeport 1 (0)
+			//printf("[RECVing] recv_frame port %d\n",*n_bridge);
+			*n_bridge = 1;
+		}
 		n_crc=fn_recv(*n_bridge,&s_Frame); // if CRC is ok -> true
 		if(n_crc) {
 			/* unicast broadcast multicast */
@@ -141,6 +146,7 @@ void fn_pthread_bridgeport(void * p_arg) {
 				fn_learn_or_refresh(*n_bridge,&s_Frame); //adding entry to DB
 
 				n_flood=fn_unicast_broadcast_multicast(*n_bridge,&s_Frame); // TRUE if flooding, FALSE if unicast
+				
 				/* flood */
 				if(n_flood) {
 					#ifdef DEBUG
