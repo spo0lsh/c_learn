@@ -13,7 +13,7 @@ int fn_recv(int n_i,SFrame *ps_Frame) {
 	int n_msqid;
 	key_t key;
 	SMessage_buf S_Rbuf;
-	if(n_i == 0) { // hack
+	if(n_i == 0) { // hack - problem with bridgeport 0->1
 		n_i=n_i + 1;
 	}
     key = MSQKEYRECV + n_i;

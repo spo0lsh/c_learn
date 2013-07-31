@@ -123,7 +123,6 @@ void fn_pthread_bridgeport(void * p_arg) {
 	while(1) {
 		/* recv frame */
 		if(*n_bridge == 0 ) { // problem with bridgeport 1 (0)
-			//printf("[RECVing] recv_frame port %d\n",*n_bridge);
 			*n_bridge = 1;
 		}
 		n_crc=fn_recv(*n_bridge,&s_Frame); // if CRC is ok -> true
