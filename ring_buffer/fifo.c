@@ -6,14 +6,16 @@
 int main() {
 	RingBuffer ringbuffer;
 	ElemType elem = {0};
-	int test = 10;
 	
 	/* init */
-	RingBufferInit(&ringbuffer,7);
+	RingBufferInit(&ringbuffer,2);
 	
 	/* write */
-	for (elem.value = 0; elem.value < 3 * test; ++ elem.value) {
-		RingBufferWrite(&ringbuffer, &elem);
+	for (elem.value = 0; elem.value < 20; ++ elem.value) {
+		printf("[%d]\tFull: %d\n",elem.value+1,RingBufferFull(&ringbuffer));
+		if(! RingBufferFull(&ringbuffer)) { /* if not full */
+			RingBufferWrite(&ringbuffer, &elem);
+		}
 	}
 	
 	/* read */
