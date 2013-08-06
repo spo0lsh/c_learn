@@ -7,12 +7,16 @@ int main() {
 	RingBuffer ringbuffer;
 	ElemType elem = {0};
 	
+	
 	/* init */
-	RingBufferInit(&ringbuffer,2);
+	//void RingBufferInit(RingBuffer *, int );
+	RingBufferInit(&ringbuffer, 10 );
 	
 	/* write */
 	for (elem.value = 0; elem.value < 20; ++ elem.value) {
+		#ifdef DEBUG
 		printf("[%d]\tFull: %d\n",elem.value+1,RingBufferFull(&ringbuffer));
+		#endif
 		if(! RingBufferFull(&ringbuffer)) { /* if not full */
 			RingBufferWrite(&ringbuffer, &elem);
 		}
@@ -23,7 +27,7 @@ int main() {
         RingBufferRead(&ringbuffer, &elem);
         printf("%d\n", elem.value);
     }
-	
+
 	/* remove */
 	RingBufferFree(&ringbuffer);
 	
@@ -35,7 +39,6 @@ void RingBufferInit(RingBuffer *ringbuffer, int size) {
 	ringbuffer->start = 0;
 	ringbuffer->end = 0;
 	ringbuffer->buffer_elements = (ElemType *)calloc(ringbuffer->size, sizeof(ElemType));
-	//ringbuffer->buffer_elements = (char *)calloc(ringbuffer->size,sizeof(char)); //rewrite to malloc
 }
 
 void RingBufferFree(RingBuffer *ringbuffer) {
