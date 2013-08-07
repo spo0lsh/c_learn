@@ -19,11 +19,8 @@ int main() {
 		if(! cbIsFull(&cb)) { /* if not full */
 			cbWrite(&cb, &elem);
 		} 
-		else 
-		{
-			printf("Full\n");
-		}
 	}
+
     /* Remove and print all elements */
     while (!cbIsEmpty(&cb)) {
         cbRead(&cb, &elem);
@@ -51,10 +48,15 @@ int cbIsEmpty(CircularBuffer *cb) {
 void cbWrite(CircularBuffer *cb, ElemType *elem) {
     int end = (cb->start + cb->count) % cb->size;
     cb->elems[end] = *elem;
-    if (cb->count == cb->size)
+    if (cb->count == cb->size) /* is full */
+    {
         cb->start = (cb->start + 1) % cb->size; /* full, overwrite */
+	}
     else
-        ++ cb->count;
+    {
+        ++ cb->count; /* count ++ */
+	}
+	printf("start %d count %d\n",cb->start,cb->count);
 }
  
 void cbRead(CircularBuffer *cb, ElemType *elem) {
