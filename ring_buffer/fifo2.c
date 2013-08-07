@@ -7,47 +7,62 @@
 // http://pl.wikipedia.org/wiki/Plik:Bufor_cykliczny_1.png
 
 int main() {
-	RingBuffer rb; /* */
+	CircularBuffer cb; /* */
+	ElemType elem = {0};
+    
+    int testBufferSize = 10; /* arbitrary size */
+    cbInit(&cb, testBufferSize);
 	
-	RingBufferInit(&rb);
-	RingBufferFree(&rb);
-	
-	return(0);
-}
-
-
-/* init */
-void RingBufferInit(RingBuffer *rb)
-{
-	int i;
-	rb->size = 0;
-	rb->start = 0;
-	rb->end = 0;
-	for(i=0;i<BUFFER_SIZE;++i)
-	{
-		rb->buf_value[i] = -1;
+    /* Fill buffer with test elements 3 times */
+    for (elem.value = 0; elem.value < 3 * testBufferSize; ++ elem.value)
+    {
+		if(! cbIsFull(&cb)) { /* if not full */
+			cbWrite(&cb, &elem);
+		} 
+		else 
+		{
+			printf("Full\n");
+		}
 	}
-}
-/* free */
-void RingBufferFree(RingBuffer *rb)
-{
-	rb=NULL;
-}
-/* full */
-int RingBufferFull(RingBuffer *rb)
-{
+    /* Remove and print all elements */
+    while (!cbIsEmpty(&cb)) {
+        cbRead(&cb, &elem);
+        printf("%d\n", elem.value);
+    }
+ 
+    cbFree(&cb);
+	
 	return(0);
 }
-/* empty */
-int RingBufferEmpty(RingBuffer *rb)
-{
-	return(0);
+
+void cbInit(CircularBuffer *cb, int size) {
+    cb->size  = size;
+    cb->start = 0;
+    cb->count = 0;
+    cb->elems = (ElemType *)calloc(cb->size, sizeof(ElemType));
 }
-/* read */
-void RingBufferWrite(RingBuffer *rb, char *value)
-{
+ 
+int cbIsFull(CircularBuffer *cb) {
+    return cb->count == cb->size; }
+ 
+int cbIsEmpty(CircularBuffer *cb) {
+    return cb->count == 0; }
+ 
+void cbWrite(CircularBuffer *cb, ElemType *elem) {
+    int end = (cb->start + cb->count) % cb->size;
+    cb->elems[end] = *elem;
+    if (cb->count == cb->size)
+        cb->start = (cb->start + 1) % cb->size; /* full, overwrite */
+    else
+        ++ cb->count;
 }
-/* write */
-void RingBufferRead(RingBuffer *rb, char *value)
-{
+ 
+void cbRead(CircularBuffer *cb, ElemType *elem) {
+    *elem = cb->elems[cb->start];
+    cb->start = (cb->start + 1) % cb->size;
+    -- cb->count;
 }
+
+void cbFree(CircularBuffer *cb) {
+    free(cb->elems); /* OK if null */ }
+
