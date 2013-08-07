@@ -1,12 +1,11 @@
-obj-m += hello.o test.o
+NAME = procfs2
+
+obj-m += $(NAME).o
 
 all:
-	make hello test
+	make $(NAME)
 
-hello:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
-
-test:
+$(NAME):
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 
 clean:
