@@ -10,7 +10,7 @@
 int main(){
 	char buf[200];
 	int fd = -1;
-	if ((fd = open("/dev/mynull2", O_RDWR)) < 0) {
+	if ((fd = open("/dev/cdev_example", O_RDWR)) < 0) {
 		perror("open");
 		return -1;
 	}
