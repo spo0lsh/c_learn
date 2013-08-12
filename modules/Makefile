@@ -1,4 +1,4 @@
-NAME = procfs2
+NAME = ringbuffor
 
 obj-m += $(NAME).o
 
