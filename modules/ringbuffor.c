@@ -73,6 +73,7 @@ void cbWrite(CircularBuffer *cb,  char value)
 void cbRead(CircularBuffer *cb,  char  *value)
 {
     *value=cb->array[cb->start];
+    cb->array[cb->start]=0;
     #ifdef DEBUG
     printk(KERN_INFO "[R] %d %0x\n", ( char )*value,( char )*value);
     #endif
@@ -114,12 +115,15 @@ static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off
 static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
 {
   printk(KERN_INFO "Driver: write()\n");
+
     //if(copy_from_user(&c, buf + len - 1,1) != 0)
     //printk(KERN_INFO "buf = %s clen = %d\n",len);
     int i;
     for(i=0;i<len;++i)
     {
 		printk(KERN_INFO "[%d]buf = %c clen = %d\n",i+1,(char)buf[i],len);
+		copy_from_user(&c, buf + i,1); /* copy from user to kernel space */
+		cbWrite(&cb,c);
 	}
     if(copy_from_user(&c, buf + len - 1,1) != 0)
     //cbWrite(&cb, (unsigned int)value)
@@ -200,6 +204,11 @@ static int __init ofcd_init(void) /* Constructor */
  
 static void __exit ofcd_exit(void) /* Destructor */
 {
+	//cbRead(&cb,&c);
+	//cbRead(&cb,&c);
+	printk(KERN_INFO "[EXIT] %d [%c]\n",cb.array[0],cb.array[0]);
+	printk(KERN_INFO "[EXIT] %d [%c]\n",cb.array[1],cb.array[1]);
+	printk(KERN_INFO "[EXIT] %d [%c]\n",cb.array[2],cb.array[2]);
   cdev_del(&c_dev);
   device_destroy(cl, first);
   class_destroy(cl);
