@@ -92,7 +92,27 @@ static int my_open(struct inode *i, struct file *f)
   printk(KERN_INFO "Driver: close()\n");
   return 0;
 }
-
+static char msg[200];
+static char dupa;
+static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
+{
+	//cbRead(&cb,&c);
+	//cbRead(&cb,&c);
+	if(!cbIsEmpty(&cb)) {
+		printk(KERN_INFO "[READ] is not empty\n");
+		cbRead(&cb,&dupa);
+		printk(KERN_INFO "dupa %d [%c]",dupa,dupa);
+		printk(KERN_INFO "[READ] %d [%c]\n",cb.array[0],cb.array[0]);
+		printk(KERN_INFO "[READ] %d [%c]\n",cb.array[1],cb.array[1]);
+		printk(KERN_INFO "[READ] %d [%c]\n",cb.array[2],cb.array[2]);
+	}
+	else
+	{
+		printk(KERN_INFO "[READ] is empty\n");
+	}
+	return 0;
+}
+/*
 static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off)
 {
     printk(KERN_INFO "Driver: read()\n");
@@ -111,13 +131,12 @@ static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off
         return 0;
 	}
 }
+*/
 
 static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
 {
   printk(KERN_INFO "Driver: write()\n");
 
-    //if(copy_from_user(&c, buf + len - 1,1) != 0)
-    //printk(KERN_INFO "buf = %s clen = %d\n",len);
     int i;
     for(i=0;i<len;++i)
     {
@@ -214,6 +233,7 @@ static void __exit ofcd_exit(void) /* Destructor */
   class_destroy(cl);
   unregister_chrdev_region(first, 1);
   printk(KERN_INFO "Alvida: ofcd unregistered");
+  printk(KERN_INFO "--------------------------------------------------------------------");
 }
  
 module_init(ofcd_init);
