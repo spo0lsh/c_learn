@@ -98,19 +98,25 @@ static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, lo
 {
 	//cbRead(&cb,&c);
 	//cbRead(&cb,&c);
-	if(!cbIsEmpty(&cb)) {
-		printk(KERN_INFO "[READ] is not empty\n");
-		cbRead(&cb,&dupa);
-		printk(KERN_INFO "dupa %d [%c]",dupa,dupa);
-		printk(KERN_INFO "[READ] %d [%c]\n",cb.array[0],cb.array[0]);
-		printk(KERN_INFO "[READ] %d [%c]\n",cb.array[1],cb.array[1]);
-		printk(KERN_INFO "[READ] %d [%c]\n",cb.array[2],cb.array[2]);
-	}
-	else
+	int i;
+	for(i=0;i<BUFFER_SIZE;++i)
 	{
-		printk(KERN_INFO "[READ] is empty\n");
+		if(!cbIsEmpty(&cb)) {
+			printk(KERN_INFO "[READ] is not empty\n");
+			cbRead(&cb,&dupa);
+			printk(KERN_INFO "dupa %d [%c]",dupa,dupa);
+			msg[i]=dupa;
+		}
+		else
+		{
+			printk(KERN_INFO "[READ] is empty\n");
+		}
 	}
-	return 0;
+	printk(KERN_INFO "[READ] %d [%c]\n",cb.array[0],cb.array[0]);
+	printk(KERN_INFO "[READ] %d [%c]\n",cb.array[1],cb.array[1]);
+	printk(KERN_INFO "[READ] %d [%c]\n",cb.array[2],cb.array[2]);
+	return simple_read_from_buffer(buffer, length, offset, msg, 200);
+	//return 0;
 }
 /*
 static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off)
