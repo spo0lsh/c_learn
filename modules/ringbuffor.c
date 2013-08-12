@@ -7,10 +7,14 @@
 #include <linux/device.h>
 #include <linux/cdev.h>
 #include <asm/uaccess.h>
-#define BUFFER_SIZE 3
-#define MY_MACIG 'G'
+#define BUFFER_SIZE 5
+#define MY_MACIG 'G'	// defines the magic number
 #define READ_IOCTL _IOR(MY_MACIG, 0, int)
 #define WRITE_IOCTL _IOW(MY_MACIG, 1, int)
+#define EMPTY_IOCTL _IO(MY_MACIG, 2) // defines our ioctl call
+#define FULL_IOCTL _IO(MY_MACIG, 3) // defines our ioctl call
+#define CLEAR_IOCTL _IO(MY_MACIG, 4) // defines our ioctl call
+#define SIZE_IOCTL _IO(MY_MACIG, 5) // defines our ioctl call
 #define DEBUG
 
 typedef struct {
@@ -52,10 +56,11 @@ int cbIsEmpty(CircularBuffer *cb)
 
 void cbWrite(CircularBuffer *cb,  char value)
 {
+	int end;
 	#ifdef DEBUG
 	printk(KERN_INFO "[W] %d %0x\n", value,value);
 	#endif
-	int end=(cb->start + cb->count) % cb->size;
+	end=(cb->start + cb->count) % cb->size;
     cb->array[end]=value;
     if (cb->count == cb->size)
     {
@@ -65,6 +70,8 @@ void cbWrite(CircularBuffer *cb,  char value)
     {
         ++cb->count; 
 	}
+	
+
 	#ifdef DEBUG
 	printk(KERN_INFO "[W] start %d count %d\n",cb->start,cb->count);
 	#endif
@@ -96,8 +103,6 @@ static char msg[200];
 static char dupa;
 static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
 {
-	//cbRead(&cb,&c);
-	//cbRead(&cb,&c);
 	int i;
 	for(i=0;i<BUFFER_SIZE;++i)
 	{
@@ -112,38 +117,14 @@ static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, lo
 			printk(KERN_INFO "[READ] is empty\n");
 		}
 	}
-	printk(KERN_INFO "[READ] %d [%c]\n",cb.array[0],cb.array[0]);
-	printk(KERN_INFO "[READ] %d [%c]\n",cb.array[1],cb.array[1]);
-	printk(KERN_INFO "[READ] %d [%c]\n",cb.array[2],cb.array[2]);
 	return simple_read_from_buffer(buffer, length, offset, msg, 200);
-	//return 0;
 }
-/*
-static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off)
-{
-    printk(KERN_INFO "Driver: read()\n");
-    if (*off == 0)
-    {
-        if (copy_to_user(buf, &c, 1) != 0)
-            return -EFAULT;
-        else
-        {
-            (*off)++;
-            return 1;
-        }
-    }
-    else
-    {
-        return 0;
-	}
-}
-*/
 
 static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
 {
+	int i;
   printk(KERN_INFO "Driver: write()\n");
 
-    int i;
     for(i=0;i<len;++i)
     {
 		printk(KERN_INFO "[%d]buf = %c clen = %d\n",i+1,(char)buf[i],len);
@@ -169,6 +150,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 	switch(cmd) {
 	case READ_IOCTL:	
 		if(copy_to_user((char *)arg, buf, 200) != 0) {
+			printk(KERN_INFO "ioctl read: something wrong\n");
 			return -EFAULT;
 		}
 		break;
@@ -176,9 +158,30 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 	case WRITE_IOCTL:
 		if(copy_from_user(buf, (char *)arg, len) !=0) {
 			printk(KERN_INFO "ioctl write: something wrong\n");
+			return -1;
 		}
 		break;
 
+	case EMPTY_IOCTL:
+		if(cbIsEmpty(&cb) != 0)
+		{
+			printk(KERN_INFO "ioctl empty\n");
+			return -1;
+		}
+		break;
+				
+	case FULL_IOCTL:
+		if(cbIsFull(&cb) != 0)
+		{
+			printk(KERN_INFO "ioctl full\n");
+			return -1;
+		}
+		break;
+/*		
+	case CLEAR_IOCTL:
+		printk(KERN_INFO "ioctl clear\n");
+		break;
+*/	 
 	default:
 		return -ENOTTY;
 	}
@@ -229,8 +232,7 @@ static int __init ofcd_init(void) /* Constructor */
  
 static void __exit ofcd_exit(void) /* Destructor */
 {
-	//cbRead(&cb,&c);
-	//cbRead(&cb,&c);
+
 	printk(KERN_INFO "[EXIT] %d [%c]\n",cb.array[0],cb.array[0]);
 	printk(KERN_INFO "[EXIT] %d [%c]\n",cb.array[1],cb.array[1]);
 	printk(KERN_INFO "[EXIT] %d [%c]\n",cb.array[2],cb.array[2]);
