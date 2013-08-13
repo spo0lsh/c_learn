@@ -104,13 +104,14 @@ static char dupa;
 static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
 {
 	int i;
-	for(i=0;i<BUFFER_SIZE;++i)
+	//for(i=0;i<BUFFER_SIZE;++i)
+	for(i=0;cb.count != 0;++i)
 	{
 		printk(KERN_INFO "[READ] start %d count %d\n",cb.start,cb.count);
 		if(!cbIsEmpty(&cb)) {
 			printk(KERN_INFO "[READ] is not empty\n");
 			cbRead(&cb,&dupa);
-			printk(KERN_INFO "dupa %d [%c]",dupa,dupa);
+			printk(KERN_INFO "dupa %d [%c]\n",dupa,dupa);
 			msg[i]=dupa;
 		}
 		else
@@ -156,7 +157,8 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 	char ch;
 	switch(cmd) {
 	case READ_IOCTL:
-		for(i=0;i<BUFFER_SIZE;++i)
+		//for(i=0;i<BUFFER_SIZE;++i)
+		for(i=0;cb.count != 0;++i)
 		{
 			cbRead(&cb,&ch);
 			buf[i] = ch;
@@ -219,7 +221,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
  
 static int __init ofcd_init(void) /* Constructor */
 {
-	printk(KERN_INFO "Namaskar: ofcd registered");
+	printk(KERN_INFO "Namaskar: ofcd registered\n");
 	if (alloc_chrdev_region(&first, 0, 1, "Shweta") < 0)
 	{
 		return -1;
@@ -258,8 +260,8 @@ static void __exit ofcd_exit(void) /* Destructor */
 	device_destroy(cl, first);
 	class_destroy(cl);
 	unregister_chrdev_region(first, 1);
-	printk(KERN_INFO "Alvida: ofcd unregistered");
-	printk(KERN_INFO "--------------------------------------------------------------------");
+	printk(KERN_INFO "Alvida: ofcd unregistered\n");
+	printk(KERN_INFO "--------------------------------------------------------------------\n");
 }
  
 module_init(ofcd_init);
