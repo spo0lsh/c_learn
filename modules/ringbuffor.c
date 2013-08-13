@@ -26,6 +26,7 @@ typedef struct {
 
 static CircularBuffer cb; // global variable for CB
 static char ch;
+static char buf[BUFFER_SIZE];
 static dev_t first; // Global variable for the first device number 
 static struct cdev c_dev; // Global variable for the character device structure
 static struct class *cl; // Global variable for the device class
@@ -100,7 +101,7 @@ static int my_open(struct inode *i, struct file *f)
 	printk(KERN_INFO "Driver: close()\n");
 	return 0;
 }
-static char msg[BUFFER_SIZE];
+//static char msg[BUFFER_SIZE];
 //static char dupa;
 static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
 {
@@ -114,16 +115,16 @@ static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, lo
 				printk(KERN_INFO "[READ] is not empty\n");
 				cbRead(&cb,&ch);
 				printk(KERN_INFO "dupa %d [%c]\n",ch,ch);
-				msg[i]=ch;
+				buf[i]=ch;
 			}
 		}
 		//return simple_read_from_buffer(buffer, length, offset, msg, BUFFER_SIZE);
-		return simple_read_from_buffer(buffer, length, offset, msg, i);
+		return simple_read_from_buffer(buffer, length, offset, buf, i);
 	}
 	else
 	{
 		printk(KERN_INFO "[READ] is empty!\n");
-		return simple_read_from_buffer(buffer, length, offset, msg, 0);
+		return simple_read_from_buffer(buffer, length, offset, buf, 0);
 	}
 	
 }
@@ -144,7 +145,7 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
 	return len;
 }
 
-char buf[BUFFER_SIZE]; //
+//char buf[BUFFER_SIZE]; //
 int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned long arg)
 {
 	int i;
