@@ -58,7 +58,7 @@ void cbWrite(CircularBuffer *cb,  char value)
 {
 	int end;
 	#ifdef DEBUG
-	printk(KERN_INFO "[W] %d %0x\n", value,value);
+	printk(KERN_INFO "[W] %d %02x [%c]\n", value,value,value);
 	#endif
 	end=(cb->start + cb->count) % cb->size;
     cb->array[end]=value;
@@ -159,20 +159,21 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 		break;
 	
 		case WRITE_IOCTL:
-		temp = (char *)arg;
-		//for(i=0;i<len;++i)
-		get_user(ch, temp);
-		for (i = 0; ch && i < len; i++, temp++)
-		{
+			temp = (char *)arg;
+			//for(i=0;i<len;++i)
 			get_user(ch, temp);
-			printk(KERN_INFO "[IOCTL W] [%d]arg = %d [%c]\n",i+1,ch,ch);
-			//copy_from_user(&c, buf + i,1); /* copy from user to kernel space */
-			//cbWrite(&cb,c);
-		}
-		if(copy_from_user(buf, (char *)arg, len) !=0) {
-			printk(KERN_INFO "ioctl write: something wrong\n");
-			return -1;
-		}
+			for (i = 0; ch && i < len; i++, temp++)
+			{
+				get_user(ch, temp);
+				printk(KERN_INFO "[IOCTL W] [%d]arg = %d [%c]\n",i+1,ch,ch);
+				//copy_from_user(&c, buf + i,1); /* copy from user to kernel space */
+				cbWrite(&cb,ch);
+			}
+			/*
+			if(copy_from_user(buf, (char *)arg, len) !=0) {
+				printk(KERN_INFO "ioctl write: something wrong\n");
+				return -1;
+			}*/
 		break;
 
 	case EMPTY_IOCTL:
