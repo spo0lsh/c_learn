@@ -83,6 +83,7 @@ void cbRead(CircularBuffer *cb,  char  *value)
     cb->array[cb->start]=0;
     #ifdef DEBUG
     printk(KERN_INFO "[R] %d %0x [%c]\n", ( char )*value,( char )*value,(char)*value);
+    printk(KERN_INFO "[R] %d %0x [%c]\n", cb->array[cb->start],cb->array[cb->start],cb->array[cb->start]);
     #endif
     cb->start=(cb->start + 1) % cb->size;
     --cb->count;
@@ -104,22 +105,27 @@ static char dupa;
 static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
 {
 	int i;
-	//for(i=0;i<BUFFER_SIZE;++i)
-	for(i=0;cb.count != 0;++i)
+	if(!cbIsEmpty(&cb))
 	{
-		printk(KERN_INFO "[READ] start %d count %d\n",cb.start,cb.count);
-		if(!cbIsEmpty(&cb)) {
-			printk(KERN_INFO "[READ] is not empty\n");
-			cbRead(&cb,&dupa);
-			printk(KERN_INFO "dupa %d [%c]\n",dupa,dupa);
-			msg[i]=dupa;
-		}
-		else
+		printk(KERN_INFO "[READ] is not empty!\n");
+		for(i=0;cb.count != 0;++i)
 		{
-			printk(KERN_INFO "[READ] is empty\n");
+			if(!cbIsEmpty(&cb)) {
+				printk(KERN_INFO "[READ] is not empty\n");
+				cbRead(&cb,&dupa);
+				printk(KERN_INFO "dupa %d [%c]\n",dupa,dupa);
+				msg[i]=dupa;
+			}
 		}
+		//return simple_read_from_buffer(buffer, length, offset, msg, BUFFER_SIZE);
+		return simple_read_from_buffer(buffer, length, offset, msg, i);
 	}
-	return simple_read_from_buffer(buffer, length, offset, msg, BUFFER_SIZE);
+	else
+	{
+		printk(KERN_INFO "[READ] is empty!\n");
+		return simple_read_from_buffer(buffer, length, offset, msg, 0);
+	}
+	
 }
 
 static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
@@ -135,17 +141,7 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
 			cbWrite(&cb,c);
 		}
 	}
-	/*
-    if(copy_from_user(&c, buf + len - 1,1) != 0)
-    {
-        return -EFAULT;
-	}
-    else
-    {
-        return len;
-	}
-	*/
-  return len;
+	return len;
 }
 
 char buf[BUFFER_SIZE]; //
