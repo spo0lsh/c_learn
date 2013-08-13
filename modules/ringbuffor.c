@@ -106,6 +106,7 @@ static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, lo
 	int i;
 	for(i=0;i<BUFFER_SIZE;++i)
 	{
+		printk(KERN_INFO "[READ] start %d count %d\n",cb.start,cb.count);
 		if(!cbIsEmpty(&cb)) {
 			printk(KERN_INFO "[READ] is not empty\n");
 			cbRead(&cb,&dupa);
@@ -128,9 +129,12 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
     for(i=0;i<len;++i)
     {
 		printk(KERN_INFO "[%d]buf = %c clen = %d\n",i+1,(char)buf[i],len);
-		copy_from_user(&c, buf + i,1); /* copy from user to kernel space */
-		cbWrite(&cb,c);
+		if(copy_from_user(&c, buf + i,1) == 0) /* copy from user to kernel space */
+		{
+			cbWrite(&cb,c);
+		}
 	}
+	/*
     if(copy_from_user(&c, buf + len - 1,1) != 0)
     {
         return -EFAULT;
@@ -139,6 +143,7 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
     {
         return len;
 	}
+	*/
   return len;
 }
 
@@ -157,7 +162,9 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 			buf[i] = ch;
 			printk(KERN_INFO "[IOCTL R] %d [%c]\n",ch,ch);
 		}
-		copy_to_user((char *)arg, buf, BUFFER_SIZE);
+		if(copy_to_user((char *)arg, buf, BUFFER_SIZE) == 0) {
+			
+		}
 
 		break;
 	
