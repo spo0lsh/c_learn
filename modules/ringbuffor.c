@@ -82,7 +82,7 @@ void cbRead(CircularBuffer *cb,  char  *value)
     *value=cb->array[cb->start];
     cb->array[cb->start]=0;
     #ifdef DEBUG
-    printk(KERN_INFO "[R] %d %0x\n", ( char )*value,( char )*value);
+    printk(KERN_INFO "[R] %d %0x [%c]\n", ( char )*value,( char )*value,(char)*value);
     #endif
     cb->start=(cb->start + 1) % cb->size;
     --cb->count;
@@ -143,7 +143,7 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
   return len;
 }
 
-char buf[200];
+char buf[200]; //
 int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned long arg)
 {
 	int i;
@@ -151,29 +151,48 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 	char *temp;
 	char ch;
 	switch(cmd) {
-	case READ_IOCTL:	
+	case READ_IOCTL:
+		for(i=0;i<BUFFER_SIZE;++i)
+		{
+			cbRead(&cb,&ch);
+			buf[i] = ch;
+			printk(KERN_INFO "[IOCTL R] %d [%c]\n",ch,ch);
+		}
+		copy_to_user((char *)arg, buf, BUFFER_SIZE);
+		/*	
+		int i;
+		for(i=0;i<BUFFER_SIZE;++i)
+		{
+			if(!cbIsEmpty(&cb)) {
+				printk(KERN_INFO "[READ] is not empty\n");
+				cbRead(&cb,&dupa);
+				printk(KERN_INFO "dupa %d [%c]",dupa,dupa);
+				msg[i]=dupa;
+			}
+			else
+			{
+				printk(KERN_INFO "[READ] is empty\n");
+			}
+		}
+		return simple_read_from_buffer(buffer, length, offset, msg, 200);
+		*/
+		/*
 		if(copy_to_user((char *)arg, buf, 200) != 0) {
 			printk(KERN_INFO "ioctl read: something wrong\n");
 			return -EFAULT;
 		}
+		*/
 		break;
 	
-		case WRITE_IOCTL:
+		case WRITE_IOCTL: // add something wronga!
 			temp = (char *)arg;
-			//for(i=0;i<len;++i)
 			get_user(ch, temp);
 			for (i = 0; ch && i < len; i++, temp++)
 			{
 				get_user(ch, temp);
 				printk(KERN_INFO "[IOCTL W] [%d]arg = %d [%c]\n",i+1,ch,ch);
-				//copy_from_user(&c, buf + i,1); /* copy from user to kernel space */
 				cbWrite(&cb,ch);
 			}
-			/*
-			if(copy_from_user(buf, (char *)arg, len) !=0) {
-				printk(KERN_INFO "ioctl write: something wrong\n");
-				return -1;
-			}*/
 		break;
 
 	case EMPTY_IOCTL:
