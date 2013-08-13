@@ -186,6 +186,10 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 			{
 				printk(KERN_INFO "ioctl empty\n");
 				return -1; // yes, is empty
+			} 
+			else 
+			{
+				printk(KERN_INFO "ioctl not empty\n");
 			}
 			break;
 	// full?
@@ -195,11 +199,19 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 				printk(KERN_INFO "ioctl full\n");
 				return -1; // yes, is full
 			}
+			else 
+			{
+				printk(KERN_INFO "ioctl not full\n");
+			}
 			break;
 	// cleanup 
 		case CLEAR_IOCTL:
 			cbInit(&cb);
 			printk(KERN_INFO "ioctl clear\n");
+			break;
+	// size
+		case SIZE_IOCTL:
+			return cb.count;
 			break;
 	// ?!
 		default:
