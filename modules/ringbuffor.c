@@ -7,7 +7,7 @@
 #include <linux/device.h>
 #include <linux/cdev.h>
 #include <asm/uaccess.h>
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 10
 #define MY_MACIG 'G'	// defines the magic number
 #define READ_IOCTL _IOR(MY_MACIG, 0, int)
 #define WRITE_IOCTL _IOW(MY_MACIG, 1, int)
@@ -99,7 +99,7 @@ static int my_open(struct inode *i, struct file *f)
   printk(KERN_INFO "Driver: close()\n");
   return 0;
 }
-static char msg[200];
+static char msg[BUFFER_SIZE];
 static char dupa;
 static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
 {
@@ -117,7 +117,7 @@ static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, lo
 			printk(KERN_INFO "[READ] is empty\n");
 		}
 	}
-	return simple_read_from_buffer(buffer, length, offset, msg, 200);
+	return simple_read_from_buffer(buffer, length, offset, msg, BUFFER_SIZE);
 }
 
 static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
@@ -143,11 +143,11 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
   return len;
 }
 
-char buf[200]; //
+char buf[BUFFER_SIZE]; //
 int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned long arg)
 {
 	int i;
-	int len = 200;
+	int len = BUFFER_SIZE;
 	char *temp;
 	char ch;
 	switch(cmd) {
@@ -159,29 +159,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 			printk(KERN_INFO "[IOCTL R] %d [%c]\n",ch,ch);
 		}
 		copy_to_user((char *)arg, buf, BUFFER_SIZE);
-		/*	
-		int i;
-		for(i=0;i<BUFFER_SIZE;++i)
-		{
-			if(!cbIsEmpty(&cb)) {
-				printk(KERN_INFO "[READ] is not empty\n");
-				cbRead(&cb,&dupa);
-				printk(KERN_INFO "dupa %d [%c]",dupa,dupa);
-				msg[i]=dupa;
-			}
-			else
-			{
-				printk(KERN_INFO "[READ] is empty\n");
-			}
-		}
-		return simple_read_from_buffer(buffer, length, offset, msg, 200);
-		*/
-		/*
-		if(copy_to_user((char *)arg, buf, 200) != 0) {
-			printk(KERN_INFO "ioctl read: something wrong\n");
-			return -EFAULT;
-		}
-		*/
+
 		break;
 	
 		case WRITE_IOCTL: // add something wronga!
