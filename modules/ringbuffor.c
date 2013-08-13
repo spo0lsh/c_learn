@@ -146,7 +146,10 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
 char buf[200];
 int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned long arg)
 {
+	int i;
 	int len = 200;
+	char *temp;
+	char ch;
 	switch(cmd) {
 	case READ_IOCTL:	
 		if(copy_to_user((char *)arg, buf, 200) != 0) {
@@ -155,7 +158,17 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 		}
 		break;
 	
-	case WRITE_IOCTL:
+		case WRITE_IOCTL:
+		temp = (char *)arg;
+		//for(i=0;i<len;++i)
+		get_user(ch, temp);
+		for (i = 0; ch && i < len; i++, temp++)
+		{
+			get_user(ch, temp);
+			printk(KERN_INFO "[IOCTL W] [%d]arg = %d [%c]\n",i+1,ch,ch);
+			//copy_from_user(&c, buf + i,1); /* copy from user to kernel space */
+			//cbWrite(&cb,c);
+		}
 		if(copy_from_user(buf, (char *)arg, len) !=0) {
 			printk(KERN_INFO "ioctl write: something wrong\n");
 			return -1;
