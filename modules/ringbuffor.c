@@ -25,7 +25,7 @@ typedef struct {
 } CircularBuffer;
 
 static CircularBuffer cb; // global variable for CB
-static char c;
+static char ch;
 static dev_t first; // Global variable for the first device number 
 static struct cdev c_dev; // Global variable for the character device structure
 static struct class *cl; // Global variable for the device class
@@ -101,7 +101,7 @@ static int my_open(struct inode *i, struct file *f)
 	return 0;
 }
 static char msg[BUFFER_SIZE];
-static char dupa;
+//static char dupa;
 static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
 {
 	int i;
@@ -112,9 +112,9 @@ static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, lo
 		{
 			if(!cbIsEmpty(&cb)) {
 				printk(KERN_INFO "[READ] is not empty\n");
-				cbRead(&cb,&dupa);
-				printk(KERN_INFO "dupa %d [%c]\n",dupa,dupa);
-				msg[i]=dupa;
+				cbRead(&cb,&ch);
+				printk(KERN_INFO "dupa %d [%c]\n",ch,ch);
+				msg[i]=ch;
 			}
 		}
 		//return simple_read_from_buffer(buffer, length, offset, msg, BUFFER_SIZE);
@@ -136,9 +136,9 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
     for(i=0;i<len;++i)
     {
 		printk(KERN_INFO "[%d]buf = %c clen = %d\n",i+1,(char)buf[i],len);
-		if(copy_from_user(&c, buf + i,1) == 0) /* copy from user to kernel space */
+		if(copy_from_user(&ch, buf + i,1) == 0) /* copy from user to kernel space */
 		{
-			cbWrite(&cb,c);
+			cbWrite(&cb,ch);
 		}
 	}
 	return len;
@@ -150,7 +150,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 	int i;
 	int len = BUFFER_SIZE;
 	char *temp;
-	char ch;
+	//char ch;
 	switch(cmd) {
 	case READ_IOCTL:
 		//for(i=0;i<BUFFER_SIZE;++i)
