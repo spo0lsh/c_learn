@@ -17,17 +17,17 @@ int main(){
 		perror("open");
 		return -1;
 	}
-//	if(ioctl(fd, WRITE_IOCTL, "hello world") < 0)
-//		perror("first ioctl");
-//	if(ioctl(fd, READ_IOCTL, buf) < 0)
-//		perror("second ioctl");
+	if(ioctl(fd, WRITE_IOCTL, "hello world") < 0)
+		perror("first ioctl");
+	if(ioctl(fd, READ_IOCTL, buf) < 0)
+		perror("second ioctl");
 	if(ioctl(fd, EMPTY_IOCTL) < 0) {
 		printf("Empty\n");
 	}
 	if(ioctl(fd, FULL_IOCTL) < 0) {
 		printf("Full\n");
 	}
-	//printf("message: %s\n", buf);
+	printf("message: %s\n", buf);
 	return 0;
 
 }
