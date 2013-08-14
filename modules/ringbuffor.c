@@ -168,6 +168,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 	switch(cmd) {
 	// not needed
 		case READ_IOCTL:
+			printk(KERN_INFO "ioctl read\n");
 			for(i=0;cb.count != 0;++i)
 			{
 				cbRead(&cb,&ch);
@@ -181,6 +182,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 		break;
 	// not needed
 		case WRITE_IOCTL: // add something wronga!
+			printk(KERN_INFO "ioctl write\n");
 			temp = (char *)arg;
 			get_user(ch, temp);
 			for (i = 0; ch && i < len; i++, temp++)
@@ -221,10 +223,12 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 			break;
 	// size
 		case SIZE_IOCTL:
+			printk(KERN_INFO "ioctl size\n");
 			return cb.count;
 			break;
 	// ?!
 		default:
+			printk(KERN_INFO "ioctl default\n");
 			return -ENOTTY;
 	}
 	return len;

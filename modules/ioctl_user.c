@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #define MY_MACIG 'G'
 #define READ_IOCTL _IOR(MY_MACIG, 0, int)
