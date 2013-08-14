@@ -7,6 +7,7 @@
 #include <linux/device.h>
 #include <linux/cdev.h>
 #include <asm/uaccess.h>
+#include <linux/semaphore.h>
 #define BUFFER_SIZE 256 /* size of ring buffor */
 #define MY_MACIG 'G'	/* defines the magic number */
 #define READ_IOCTL _IOR(MY_MACIG, 0, int) /* defines out READ ioctl call */
@@ -30,6 +31,7 @@ static char buf[BUFFER_SIZE]; // Global variable for buffor
 static dev_t first; // Global variable for the first device number 
 static struct cdev c_dev; // Global variable for the character device structure
 static struct class *cl; // Global variable for the device class
+struct semaphore sem;     /* mutual exclusion semaphore     */
 
 
 // init of ring buffor
@@ -97,11 +99,19 @@ void cbRead(CircularBuffer *cb,  char  *value)
 
 static int my_open(struct inode *i, struct file *f)
 {
+	if(down_interruptible(&sem)) 
+	{
+		return -1;
+		printk(KERN_INFO " could not hold semaphore");
+	}
+	
 	printk(KERN_INFO "Driver: open()\n");
 	return 0;
 }
-  static int my_close(struct inode *i, struct file *f)
+
+static int my_close(struct inode *i, struct file *f)
 {
+	up(&sem);
 	printk(KERN_INFO "Driver: close()\n");
 	return 0;
 }
@@ -234,6 +244,7 @@ static struct file_operations pugs_fops =
 // creating char device and init ring buffor
 static int __init ofcd_init(void) /* Constructor */
 {
+	init_MUTEX(&sem);
 	printk(KERN_INFO "Loading kernel\n");
 	if (alloc_chrdev_region(&first, 0, 1, "Shweta") < 0)
 	{
@@ -266,6 +277,7 @@ static int __init ofcd_init(void) /* Constructor */
 // close char device
 static void __exit ofcd_exit(void) /* Destructor */
 {
+	up(&sem);
 	cdev_del(&c_dev);
 	device_destroy(cl, first);
 	class_destroy(cl);
