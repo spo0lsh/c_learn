@@ -47,6 +47,7 @@ int main(){
 	}
 	printf("\n");
 	printf("message: %s\n", buf);
+	close(fd);
 	return 0;
 
 }
