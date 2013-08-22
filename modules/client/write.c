@@ -4,20 +4,18 @@
 #include <stdio.h>
 #include <signal.h>  /* for signal() */
 
-int global;
-int killpids(char *,int );
-void catch_signal(int );
-void catch_usr1(int );
-void catch_usr2(int );
+int global; // for blocking
+int killpids(char *,int ); // send signal to name
+void catch_usr1(int ); // for SIGUSR1
+void catch_usr2(int ); // for SIGUSR1
 
 int main()
 {
 	char *name="read";
 	char input[256+1];
 	char ch;
-	//int fd = -1;
 	FILE *file;	
-	
+	//
 	while(1)
 	{
 		signal(SIGUSR1, catch_usr1);
@@ -27,7 +25,7 @@ int main()
 		scanf("%s", &ch);
 		switch(ch)
 		{
-			case 'W':
+			case 'W': // send "stop" signal, read 256 chars, write it do /dev/
 				killpids(name,1);
 				printf("Input string: ");
 				scanf("%256s", input);
@@ -39,7 +37,7 @@ int main()
 				}
 				fprintf(file,"%s",input);
 				fclose(file);
-				killpids(name,2);
+				killpids(name,2); // send "start"
 			break;
 			
 			case 'Q':
@@ -58,11 +56,6 @@ int main()
 	return 0;
 }
 
-void catch_signal(int signal_number)
-{
-	printf("Catch signal: %d\n",signal_number);
-}
-
 void catch_usr1(int num)
 {
 	global=1;
@@ -79,10 +72,9 @@ void catch_usr2(int num)
 	global=0;
 }
 
+// found pids by name and send signal
 int killpids(char * name,int num)
 {
-	//printf("name %s %d\n",  name, num);
-	
 	const char*	directory = "/proc";
 	size_t		taskNameSize = 1024; 
 	char*		taskName = calloc(1, taskNameSize); // ?!
@@ -124,8 +116,6 @@ int killpids(char * name,int num)
 								printf("Something wrong\n");
 							break;
 						}
-						//kill(pid,SIGUSR1);
-						//kill(pid,SIGUSR2);
 					}
 				}
 				fclose(cmdline);

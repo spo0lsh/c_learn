@@ -4,11 +4,10 @@
 #include <stdio.h>
 #include <signal.h>  /* for signal() */
 
-int global;
-int killpids(char *,int );
-void catch_signal(int );
-void catch_usr1(int );
-void catch_usr2(int );
+int global; // for blocking
+int killpids(char *,int ); // send signal to name
+void catch_usr1(int ); // for SIGUSR1
+void catch_usr2(int ); // for SIGUSR1
 
 int main()
 {
@@ -27,7 +26,7 @@ int main()
 		scanf("%s", &ch);
 		switch(ch)
 		{
-			case 'R':
+			case 'R': // send "stop" signal, read 256 chars, read from /dev/
 				killpids(name,1);
 				file = fopen("/dev/ringbuffor","r");
 				if (file == NULL)
@@ -81,11 +80,10 @@ void catch_usr2(int num)
 	global=0;
 }
 
+// found pids by name and send signal
 int killpids(char * name,int num)
 {
-	//printf("name %s %d\n",  name, num);
-	
-	const char*	directory = "/proc";
+	const char*	directory = "/pr// for blockingoc";
 	size_t		taskNameSize = 1024; 
 	char*		taskName = calloc(1, taskNameSize); // ?!
 	
