@@ -4,21 +4,79 @@
 #include <stdio.h>
 #include <signal.h>  /* for signal() */
 
+int global;
 int killpids(char *,int );
 void catch_signal(int );
+void catch_usr1(int );
+void catch_usr2(int );
 
 int main()
 {
-	char * name="test2";
+	char *name="read";
+	char input[256+1];
+	char ch;
+	//int fd = -1;
+	FILE *file;	
+	
+	while(1)
+	{
+		signal(SIGUSR1, catch_usr1);
+		signal(SIGUSR2, catch_usr2);
+		printf("(W)rite\n");
+		printf("(Q)uit\n");
+		scanf("%s", &ch);
+		switch(ch)
+		{
+			case 'W':
+				killpids(name,1);
+				printf("Input string: ");
+				scanf("%256s", input);
+				file = fopen("/dev/ringbuffor","w");
+				fprintf(file,"%s",input);
+				fclose(file);
+			break;
+			
+			case 'Q':
+				printf("Bye..\n");
+				return(0);
+			break;
+			
+			default:
+				printf("What?\n");
+			break;
+		}
+		
+	}
+	/*
 	killpids(name,1);
 	signal(SIGUSR1, catch_signal);
 	signal(SIGUSR2, catch_signal);
+	printf("Input string: ");
+	scanf("%256s", input);
+	printf("String: %s\n", input);
+	*/
 	return 0;
 }
 
 void catch_signal(int signal_number)
 {
 	printf("Catch signal: %d\n",signal_number);
+}
+
+void catch_usr1(int num)
+{
+	global=1;
+	printf("Stop ...\n");
+	while(global)
+	{
+		
+	}
+}
+
+void catch_usr2(int num)
+{
+	printf("Star after stop ...\n");
+	global=0;
 }
 
 int killpids(char * name,int num)

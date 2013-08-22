@@ -7,9 +7,12 @@
 int killpids(char *,int );
 void catch_signal(int );
 
+
+
 int main()
 {
-	char * name="test2";
+	char *name="write";
+	//char *
 	killpids(name,1);
 	signal(SIGUSR1, catch_signal);
 	signal(SIGUSR2, catch_signal);
