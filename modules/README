@@ -1,0 +1,6 @@
+module/
+	ringbuffor.c - Module for kernel 2.6.x. Tested on 2.6.32-5-686 Debian 6.0.7
+Userspace/
+	ioctl.c - checking ioctl
+	read.c - reading from ringbuffor by /dev/
+	write.c - writing to ringbuffor by /dev/
