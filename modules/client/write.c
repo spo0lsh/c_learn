@@ -32,12 +32,19 @@ int main()
 				printf("Input string: ");
 				scanf("%256s", input);
 				file = fopen("/dev/ringbuffor","w");
+				if (file == NULL)
+				{
+					printf("Error opening file!\n");
+					exit(1);
+				}
 				fprintf(file,"%s",input);
 				fclose(file);
+				killpids(name,2);
 			break;
 			
 			case 'Q':
 				printf("Bye..\n");
+				killpids(name,2);
 				return(0);
 			break;
 			
@@ -47,14 +54,7 @@ int main()
 		}
 		
 	}
-	/*
-	killpids(name,1);
-	signal(SIGUSR1, catch_signal);
-	signal(SIGUSR2, catch_signal);
-	printf("Input string: ");
-	scanf("%256s", input);
-	printf("String: %s\n", input);
-	*/
+
 	return 0;
 }
 
@@ -81,7 +81,7 @@ void catch_usr2(int num)
 
 int killpids(char * name,int num)
 {
-	printf("name %s %d\n",  name, num);
+	//printf("name %s %d\n",  name, num);
 	
 	const char*	directory = "/proc";
 	size_t		taskNameSize = 1024; 

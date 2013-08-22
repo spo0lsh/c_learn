@@ -4,18 +4,59 @@
 #include <stdio.h>
 #include <signal.h>  /* for signal() */
 
+int global;
 int killpids(char *,int );
 void catch_signal(int );
-
-
+void catch_usr1(int );
+void catch_usr2(int );
 
 int main()
 {
 	char *name="write";
-	//char *
-	killpids(name,1);
-	signal(SIGUSR1, catch_signal);
-	signal(SIGUSR2, catch_signal);
+	char output[256+1];
+	char ch;
+	//int fd = -1;
+	FILE *file;	
+	
+	while(1)
+	{
+		signal(SIGUSR1, catch_usr1);
+		signal(SIGUSR2, catch_usr2);
+		printf("(R)ead\n");
+		printf("(Q)uit\n");
+		scanf("%s", &ch);
+		switch(ch)
+		{
+			case 'R':
+				killpids(name,1);
+				file = fopen("/dev/ringbuffor","r");
+				if (file == NULL)
+				{
+					printf("Error opening file!\n");
+					exit(1);
+				}
+				printf("The string:\n%s", output);
+				while(fscanf(file, "%s", output)!=EOF)
+				{
+					printf("%s",output);
+				}
+				printf("\n");
+				fclose(file);
+				killpids(name,2);
+			break;
+			
+			case 'Q':
+				printf("Bye..\n");
+				killpids(name,2);
+				return(0);
+			break;
+			
+			default:
+				printf("What?\n");
+			break;
+		}
+		
+	}
 	return 0;
 }
 
@@ -24,9 +65,25 @@ void catch_signal(int signal_number)
 	printf("Catch signal: %d\n",signal_number);
 }
 
+void catch_usr1(int num)
+{
+	global=1;
+	printf("Stop ...\n");
+	while(global)
+	{
+		
+	}
+}
+
+void catch_usr2(int num)
+{
+	printf("Star after stop ...\n");
+	global=0;
+}
+
 int killpids(char * name,int num)
 {
-	printf("name %s %d\n",  name, num);
+	//printf("name %s %d\n",  name, num);
 	
 	const char*	directory = "/proc";
 	size_t		taskNameSize = 1024; 
