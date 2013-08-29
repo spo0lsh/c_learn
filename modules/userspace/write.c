@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <signal.h>  /* for signal() */
 
-int global; // for blocking
 int killpids(char *,int ); // send signal to name
 void catch_usr1(int ); // for SIGUSR1
 void catch_usr2(int ); // for SIGUSR1
@@ -19,14 +18,12 @@ int main()
 	while(1)
 	{
 		signal(SIGUSR1, catch_usr1);
-		signal(SIGUSR2, catch_usr2);
 		printf("(W)rite\n");
 		printf("(Q)uit\n");
 		scanf("%s", &ch);
 		switch(ch)
 		{
 			case 'W': // send "stop" signal, read 256 chars, write it do /dev/
-				killpids(name,1);
 				printf("Input string: ");
 				scanf("%256s", input);
 				file = fopen("/dev/ringbuffor","w");
@@ -37,12 +34,11 @@ int main()
 				}
 				fprintf(file,"%s",input);
 				fclose(file);
-				killpids(name,2); // send "start"
+				killpids(name,1); // writing finished
 			break;
 			
 			case 'Q':
 				printf("Bye..\n");
-				killpids(name,2);
 				return(0);
 			break;
 			
@@ -58,18 +54,7 @@ int main()
 
 void catch_usr1(int num)
 {
-	global=1;
-	printf("Stop ...\n");
-	while(global)
-	{
-		
-	}
-}
-
-void catch_usr2(int num)
-{
-	printf("Star after stop ...\n");
-	global=0;
+	printf("Need compare\n");
 }
 
 // found pids by name and send signal
