@@ -3,10 +3,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>  /* for signal() */
+#include <string.h>
 
 int killpids(char *,int ); // send signal to name
 void catch_usr1(int ); // for SIGUSR1
-void catch_usr2(int ); // for SIGUSR1
+char userstring[256+1];
 
 int main()
 {
@@ -14,7 +15,7 @@ int main()
 	char input[256+1];
 	char ch;
 	FILE *file;	
-	//
+
 	while(1)
 	{
 		signal(SIGUSR1, catch_usr1);
@@ -34,6 +35,7 @@ int main()
 				}
 				fprintf(file,"%s",input);
 				fclose(file);
+				strcpy(userstring,input);
 				killpids(name,1); // writing finished
 			break;
 			
@@ -54,7 +56,37 @@ int main()
 
 void catch_usr1(int num)
 {
-	printf("Need compare\n");
+	char string[256+1];
+	FILE *readfile;	
+	readfile=NULL; // fixed
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t s_read;	
+	readfile = fopen("/tmp/rinbuffor","r");
+	if (readfile == NULL)
+	{
+		printf("Error opening file!\n");
+		exit(1);
+	} else {
+		while ((s_read = getline(&line, &len, readfile)) != -1) 
+		{
+			//printf("%s",line);
+		}
+		printf("\n");
+		strcpy(string,line);
+		if (strcmp (userstring,string) == 0)
+		{
+			printf("Jupi!\n");
+		}
+		else
+		{
+			printf("WTF? \"%s\" != \"%s\"\n",userstring,line);
+		}
+		
+		
+		printf("Closing files\n");
+		fclose(readfile);
+	}
 }
 
 // found pids by name and send signal
