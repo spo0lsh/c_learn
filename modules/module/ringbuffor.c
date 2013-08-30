@@ -230,16 +230,6 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd,
 	return len;
 }
 
-/* what we can to in /dev/ ... */
-static struct file_operations pugs_fops =
-{
-	.owner = THIS_MODULE,
-	.open = my_open,
-	.release = my_close,
-	.read = my_read,
-	.write = my_write,
-	.ioctl = my_ioctl
-};
  
 /* creating char device and init ring buffor */
 static int __init ofcd_init(void) /* Constructor */

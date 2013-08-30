@@ -17,6 +17,7 @@
 /* IOCTL buffor usage (size of data) */
 #define SIZE_IOCTL _IO(MY_MACIG, 5)
 
+/* ring buffor structure */
 typedef struct {
 	int size;   /* maximum number of elements            */
 	int start;  /* index of oldest element               */
@@ -41,4 +42,17 @@ static ssize_t my_write(struct file *f, const char __user *buf,
 								size_t len, loff_t *off);
 int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, 
 								unsigned long arg);
+
+
+/* what we can to in /dev/ ... */
+static struct file_operations pugs_fops =
+{
+	.owner = THIS_MODULE,
+	.open = my_open,
+	.release = my_close,
+	.read = my_read,
+	.write = my_write,
+	.ioctl = my_ioctl
+};
+
 #endif /* __ringbuffor_H */
