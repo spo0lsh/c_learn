@@ -55,4 +55,10 @@ static struct file_operations pugs_fops =
 	.ioctl = my_ioctl
 };
 
+/* creating char device and init ring buffor */
+static int __init ofcd_init(void);
+
+/* close char device */
+static void __exit ofcd_exit(void);
+
 #endif /* __ringbuffor_H */
