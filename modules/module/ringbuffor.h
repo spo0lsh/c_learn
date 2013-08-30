@@ -30,19 +30,25 @@ MODULE_LICENSE("GPL");
 
 
 void cbInit(CircularBuffer *);
-int cbIsFull(CircularBuffer *cb);
-int cbIsEmpty(CircularBuffer *cb);
-void cbWrite(CircularBuffer *cb,  char value);
-void cbRead(CircularBuffer *cb,  char  *value);
-static int my_open(struct inode *i, struct file *f);
-static int my_close(struct inode *i, struct file *f);
-static ssize_t my_read(struct file *filp, char __user *buffer, 
-								size_t length, loff_t *offset);
-static ssize_t my_write(struct file *f, const char __user *buf, 
-								size_t len, loff_t *off);
-int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, 
-								unsigned long arg);
+int cbIsFull(CircularBuffer *);
+int cbIsEmpty(CircularBuffer *);
+void cbWrite(CircularBuffer *,  char );
+void cbRead(CircularBuffer *,  char  *);
+static int my_open(struct inode *, struct file *);
+static int my_close(struct inode *, struct file *);
+static ssize_t my_read(struct file *, char  *, 
+								size_t , loff_t *);
+static ssize_t my_write(struct file *, const char __user *, 
+								size_t , loff_t *);
+int my_ioctl(struct inode *, struct file *, unsigned int , 
+								unsigned long );
 
+
+/* creating char device and init ring buffor */
+static int __init ofcd_init(void);
+
+/* close char device */
+static void __exit ofcd_exit(void);
 
 /* what we can to in /dev/ ... */
 static struct file_operations pugs_fops =
@@ -55,10 +61,5 @@ static struct file_operations pugs_fops =
 	.ioctl = my_ioctl
 };
 
-/* creating char device and init ring buffor */
-static int __init ofcd_init(void);
-
-/* close char device */
-static void __exit ofcd_exit(void);
 
 #endif /* __ringbuffor_H */
