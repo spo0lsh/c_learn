@@ -2,17 +2,18 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <signal.h>  /* for signal() */
+#include <signal.h>
 #include <string.h>
+#include "write.h"
 
-int killpids(char *,int ); // send signal to name
-void catch_usr1(int ); // for SIGUSR1
-char userstring[256+1];
+
+char user_string[BUFFORSIZE+1];
+
 
 int main()
 {
 	char *name="read";
-	char input[256+1];
+	char input[BUFFORSIZE+1];
 	char ch;
 	FILE *file;	
 
@@ -35,8 +36,8 @@ int main()
 				}
 				fprintf(file,"%s",input);
 				fclose(file);
-				strcpy(userstring,input);
-				killpids(name,1); // writing finished
+				strcpy(user_string,input);
+				found_pids_by_name_send_signal(name,1); // writing finished
 			break;
 			
 			case 'Q':
@@ -56,7 +57,7 @@ int main()
 
 void catch_usr1(int num)
 {
-	char string[256+1];
+	char string[BUFFORSIZE+1];
 	FILE *readfile;	
 	readfile=NULL; // fixed
 	char *line = NULL;
@@ -74,13 +75,13 @@ void catch_usr1(int num)
 		}
 		printf("\n");
 		strcpy(string,line);
-		if (strcmp (userstring,string) == 0)
+		if (strcmp (user_string,string) == 0)
 		{
 			printf("Jupi!\n");
 		}
 		else
 		{
-			printf("WTF? \"%s\" != \"%s\"\n",userstring,line);
+			printf("WTF? \"%s\" != \"%s\"\n",user_string,line);
 		}
 		
 		
@@ -90,7 +91,7 @@ void catch_usr1(int num)
 }
 
 // found pids by name and send signal
-int killpids(char * name,int num)
+int found_pids_by_name_send_signal(char * name,int num)
 {
 	const char*	directory = "/proc";
 	size_t		taskNameSize = 1024; 
@@ -105,7 +106,8 @@ int killpids(char * name,int num)
 		
 		while ((de = readdir(dir)) != 0)
 		{
-			if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0)
+			if (strcmp(de->d_name, ".") == 0 
+								|| strcmp(de->d_name, "..") == 0)
 			{
 				continue;
 			}
@@ -115,12 +117,12 @@ int killpids(char * name,int num)
 			{
 				char cmdline_file[1024] = {0};
 				sprintf(cmdline_file, "%s/%d/cmdline", directory, pid);
-				FILE* cmdline = fopen(cmdline_file, "r"); // open file (from sprintf)
+				FILE* cmdline = fopen(cmdline_file, "r");
 				if (getline(&taskName, &taskNameSize, cmdline) > 0)
 				{
 					if (strstr(taskName, name) != 0)
 					{
-						fprintf(stdout, "A %s process, with PID %d, has been detected.\n", name, pid);
+						printf("Send signal to pid = %d\n",pid);
 						switch(num)
 						{
 							case 1:

@@ -1,3 +1,7 @@
+#ifndef __ioctl_H
+#define __ioctl_H
+
+
 /* defines the magic number */
 #define MY_MACIG 'G'
 /* IOCTL to read */
@@ -12,3 +16,5 @@
 #define CLEAR_IOCTL _IO(MY_MACIG, 4)
 /* IOCTL buffor usage (size of data) */
 #define SIZE_IOCTL _IO(MY_MACIG, 5)
+
+#endif /* __ioctl_H */
