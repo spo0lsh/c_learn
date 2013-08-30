@@ -8,22 +8,9 @@
 #include <linux/cdev.h>
 #include <asm/uaccess.h>
 #include <linux/semaphore.h>
-#define BUFFER_SIZE 256 /* size of ring buffor */
-#define MY_MACIG 'G'	/* defines the magic number */
-#define READ_IOCTL _IOR(MY_MACIG, 0, int) /* defines out READ ioctl call */
-#define WRITE_IOCTL _IOW(MY_MACIG, 1, int) /* defines out WRITE ioctl call */
-#define EMPTY_IOCTL _IO(MY_MACIG, 2) /* defines our ioctl call */
-#define FULL_IOCTL _IO(MY_MACIG, 3) /* defines our ioctl call */
-#define CLEAR_IOCTL _IO(MY_MACIG, 4) /* defines our ioctl call */
-#define SIZE_IOCTL _IO(MY_MACIG, 5) /* defines our ioctl call */
-//#define DEBUG
+#include "ringbuffor.h"
 
-typedef struct {
-	int size;   /* maximum number of elements            */
-	int start;  /* index of oldest element               */
-	int count;    /* index at which to write new element */
-	char array[BUFFER_SIZE];  /* vector of elements      */
-} CircularBuffer;
+
 
 static CircularBuffer cb; // global variable for CB
 static char ch; // Global variable for one char
