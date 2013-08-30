@@ -29,18 +29,23 @@ typedef struct {
 MODULE_LICENSE("GPL");
 
 /* init of ring buffor */
+void ringbuffor_init(CircularBuffer *);
 void cbInit(CircularBuffer *);
 
 /* return 0 if Full */
+int ringbuffor_is_full(CircularBuffer *);
 int cbIsFull(CircularBuffer *);
 
 /* return 0 if empty */
+int ringbuffor_is_empty(CircularBuffer *);
 int cbIsEmpty(CircularBuffer *);
 
 /* write single char to ring buffor */
+void ringbuffor_write(CircularBuffer *);
 void cbWrite(CircularBuffer *,  char );
 
 /* read single char from ring buffor */
+void ringbuffor_read(CircularBuffer *);
 void cbRead(CircularBuffer *,  char  *);
 
 /* open /dev/ file */
