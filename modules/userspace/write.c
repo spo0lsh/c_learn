@@ -6,9 +6,8 @@
 #include <string.h>
 #include "write.h"
 
-
+/* global variable */
 char user_string[BUFFORSIZE+1];
-
 
 int main()
 {
@@ -17,17 +16,22 @@ int main()
 	char ch;
 	FILE *file;	
 
+	/* infinity loop */
 	while(1)
 	{
+		/* register signal SIGUSR1 */
 		signal(SIGUSR1, catch_usr1);
+		/* menu */
 		printf("(W)rite\n");
 		printf("(Q)uit\n");
 		scanf("%s", &ch);
 		switch(ch)
 		{
-			case 'W': // send "stop" signal, read 256 chars, write it do /dev/
+			/* write 256 chars to driver and send SIGUSR1 to read task */
+			case 'W':
 				printf("Input string: ");
 				scanf("%256s", input);
+				/* try open file in write mode */
 				file = fopen("/dev/ringbuffor","w");
 				if (file == NULL)
 				{
@@ -36,10 +40,12 @@ int main()
 				}
 				fprintf(file,"%s",input);
 				fclose(file);
+				/* copy user input to global variable */
 				strcpy(user_string,input);
-				found_pids_by_name_send_signal(name,1); // writing finished
+				/* send SIGUSR1 to task "name" */
+				found_pids_by_name_send_signal(name,1);
 			break;
-			
+			/* quit */
 			case 'Q':
 				printf("Bye..\n");
 				return(0);
@@ -55,14 +61,16 @@ int main()
 	return 0;
 }
 
+/* catch SIGUSR1 */
 void catch_usr1(int num)
 {
 	char string[BUFFORSIZE+1];
 	FILE *readfile;	
-	readfile=NULL; // fixed
+	readfile=NULL;
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t s_read;	
+	/* reading lines from "name" task */
 	readfile = fopen("/tmp/rinbuffor","r");
 	if (readfile == NULL)
 	{
@@ -74,6 +82,7 @@ void catch_usr1(int num)
 			//printf("%s",line);
 		}
 		printf("\n");
+		/* compare readed data with input data */
 		strcpy(string,line);
 		if (strcmp (user_string,string) == 0)
 		{
@@ -96,14 +105,10 @@ int found_pids_by_name_send_signal(char * name,int num)
 	const char*	directory = "/proc";
 	size_t		taskNameSize = 1024; 
 	char*		taskName = calloc(1, taskNameSize); // ?!
-	
 	DIR*		dir = opendir(directory);
-	
-	
+	/* searching pid(s) by name in /proc directory */
 	if(dir) {
-		
 		struct dirent* de = 0; //?
-		
 		while ((de = readdir(dir)) != 0)
 		{
 			if (strcmp(de->d_name, ".") == 0 
@@ -140,9 +145,7 @@ int found_pids_by_name_send_signal(char * name,int num)
 				fclose(cmdline);
 			}
 		}
-		
 		closedir(dir);
 	}
-
 	return 0;
 }
