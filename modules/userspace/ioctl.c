@@ -3,47 +3,68 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+/*
+ * Simple ioctl() testing program
+ *  */
+
+/* defines the magic number */
 #define MY_MACIG 'G'
-#define READ_IOCTL _IOR(MY_MACIG, 0, int)  // not needed
-#define WRITE_IOCTL _IOW(MY_MACIG, 1, int) // not needed
-#define EMPTY_IOCTL _IO(MY_MACIG, 2) // defines our ioctl call
-#define FULL_IOCTL _IO(MY_MACIG, 3) // defines our ioctl call
-#define CLEAR_IOCTL _IO(MY_MACIG, 4) // defines our ioctl call
-#define SIZE_IOCTL _IO(MY_MACIG, 5) // defines our ioctl call
+/* IOCTL to read */
+#define READ_IOCTL _IOR(MY_MACIG, 0, int)
+/* IOCTL to write */
+#define WRITE_IOCTL _IOW(MY_MACIG, 1, int)
+/* IOCTL checking status EMPTY */
+#define EMPTY_IOCTL _IO(MY_MACIG, 2)
+/* IOCTL checking status FULL */
+#define FULL_IOCTL _IO(MY_MACIG, 3)
+/* IOCTL clear data */
+#define CLEAR_IOCTL _IO(MY_MACIG, 4)
+/* IOCTL buffor usage (size of data) */
+#define SIZE_IOCTL _IO(MY_MACIG, 5)
 
 int main(){
-	char ch;
+	/* menu */
+	char menu;
+	/* file descriptor */
 	int fd = -1;
 
+	/* infinity loop */
 	while(1)
 	{
+		/* menu */
 		printf("e - Check for Empty\n");
 		printf("f - Check for Full\n");
 		printf("c - Clear buffor\n");
 		printf("s - Check buffor size\n");
 		printf("q - quit\n");
-		scanf("%s", &ch);
+		scanf("%s", &menu);
+		/* opening module char device */
 		if ((fd = open("/dev/ringbuffor", O_RDWR)) < 0) {
 			perror("open");
 			return -1;
 		}
-		switch(ch)
+		/* switch for menu */
+		switch(menu)
 		{
+			/* empty buffor */
 			case 'e':
 				if(ioctl(fd, EMPTY_IOCTL) < 0) {
 					printf("Empty\n");
 				}
 			break;
+			/* full buffor */
 			case 'f':
 				if(ioctl(fd, FULL_IOCTL) < 0) {
 					printf("Full\n");
 				}
 			break;
+			/* clear buffor */
 			case 'c':
 				if(ioctl(fd, CLEAR_IOCTL) < 0) {
 					perror("Clear\n");
 				}
 			break;
+			/* using size buffor */
 			case 's':
 				if(ioctl(fd, SIZE_IOCTL) < 0) {
 					printf("Size: %d\n",ioctl(fd, SIZE_IOCTL));
@@ -51,8 +72,10 @@ int main(){
 					printf("Size: %d\n",ioctl(fd, SIZE_IOCTL));
 				}
 			break;
+			/* exit */
 			case 'q':
 				printf("Bye..\n");
+				close(fd);
 				return(0);
 			break;
 		}
