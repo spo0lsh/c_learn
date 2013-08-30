@@ -27,4 +27,18 @@ typedef struct {
 /* must have */
 MODULE_LICENSE("GPL");
 
+
+void cbInit(CircularBuffer *);
+int cbIsFull(CircularBuffer *cb);
+int cbIsEmpty(CircularBuffer *cb);
+void cbWrite(CircularBuffer *cb,  char value);
+void cbRead(CircularBuffer *cb,  char  *value);
+static int my_open(struct inode *i, struct file *f);
+static int my_close(struct inode *i, struct file *f);
+static ssize_t my_read(struct file *filp, char __user *buffer, 
+								size_t length, loff_t *offset);
+static ssize_t my_write(struct file *f, const char __user *buf, 
+								size_t len, loff_t *off);
+int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, 
+								unsigned long arg);
 #endif /* __ringbuffor_H */

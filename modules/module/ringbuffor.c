@@ -109,8 +109,9 @@ static int my_close(struct inode *i, struct file *f)
 	return 0;
 }
 
-// read from ring buffor and write to user
-static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, loff_t *offset)
+/* read from ring buffor and write to user */
+static ssize_t my_read(struct file *filp, char __user *buffer, 
+										size_t length, loff_t *offset)
 {
 	int i;
 	printk(KERN_INFO "Driver: read()\n");
@@ -135,8 +136,9 @@ static ssize_t my_read(struct file *filp, char __user *buffer, size_t length, lo
 	
 }
 
-// write to ring buffor from user (/dev)
-static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
+/* write to ring buffor from user (/dev) */
+static ssize_t my_write(struct file *f, const char __user *buf, 
+								size_t len, loff_t *off)
 {
 	int i;
 	printk(KERN_INFO "Driver: write()\n");
@@ -153,7 +155,8 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
 }
 
 /* ioctl */
-int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned long arg)
+int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, 
+							unsigned long arg)
 {
 	int i;
 	int len = BUFFER_SIZE;
