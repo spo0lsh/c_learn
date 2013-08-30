@@ -23,26 +23,43 @@ typedef struct {
 	int start;  /* index of oldest element               */
 	int count;    /* index at which to write new element */
 	char array[BUFFER_SIZE];  /* array of elements      */
-} CircularBuffer;
+} CircularBuffer; /* typedef */
 
 /* must have */
 MODULE_LICENSE("GPL");
 
-
+/* init of ring buffor */
 void cbInit(CircularBuffer *);
+
+/* return 0 if Full */
 int cbIsFull(CircularBuffer *);
+
+/* return 0 if empty */
 int cbIsEmpty(CircularBuffer *);
+
+/* write single char to ring buffor */
 void cbWrite(CircularBuffer *,  char );
+
+/* read single char from ring buffor */
 void cbRead(CircularBuffer *,  char  *);
+
+/* open /dev/ file */
 static int my_open(struct inode *, struct file *);
+
+/* close /dev/ file */
 static int my_close(struct inode *, struct file *);
+
+/* reading /dev/ file */
 static ssize_t my_read(struct file *, char  *, 
 								size_t , loff_t *);
+								
+/* writing /dev/ file */
 static ssize_t my_write(struct file *, const char __user *, 
 								size_t , loff_t *);
+
+/* ioctl implementation */
 int my_ioctl(struct inode *, struct file *, unsigned int , 
 								unsigned long );
-
 
 /* creating char device and init ring buffor */
 static int __init ofcd_init(void);
