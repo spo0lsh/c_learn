@@ -11,14 +11,20 @@
 #include "ringbuffor.h"
 
 
-
-static CircularBuffer cb; // global variable for CB
-static char ch; // Global variable for one char
-static char buf[BUFFER_SIZE]; // Global variable for buffor
-static dev_t first; // Global variable for the first device number 
-static struct cdev c_dev; // Global variable for the character device structure
-static struct class *cl; // Global variable for the device class
-struct semaphore sem;     /* mutual exclusion semaphore     */
+/* global variable for CB */
+static CircularBuffer cb; 
+/* Global variable for one char */
+static char ch; 
+/* Global variable for buffor */
+static char buf[BUFFER_SIZE]; 
+/* Global variable for the first device number */
+static dev_t first; 
+/* Global variable for the character device structure */
+static struct cdev c_dev; 
+/* Global variable for the device class */
+static struct class *cl; 
+/* mutual exclusion semaphore */
+struct semaphore sem;     
 
 
 // init of ring buffor
@@ -146,7 +152,7 @@ static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff
 	return len;
 }
 
-// ioctl
+/* ioctl */
 int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned long arg)
 {
 	int i;
@@ -221,7 +227,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd, unsigned lon
 	return len;
 }
 
-// what we can to in /dev/ ...
+/* what we can to in /dev/ ... */
 static struct file_operations pugs_fops =
 {
 	.owner = THIS_MODULE,
@@ -232,7 +238,7 @@ static struct file_operations pugs_fops =
 	.ioctl = my_ioctl
 };
  
-// creating char device and init ring buffor
+/* creating char device and init ring buffor */
 static int __init ofcd_init(void) /* Constructor */
 {
 	init_MUTEX(&sem);
@@ -265,7 +271,7 @@ static int __init ofcd_init(void) /* Constructor */
 	return 0;
 }
 
-// close char device
+/* close char device */
 static void __exit ofcd_exit(void) /* Destructor */
 {
 	up(&sem);
@@ -276,8 +282,7 @@ static void __exit ofcd_exit(void) /* Destructor */
 	printk(KERN_INFO "Unloading module\n");
 }
 
-//execute when load or remove
+/* execute when load or remove */
 module_init(ofcd_init);
 module_exit(ofcd_exit);
-// must have
-MODULE_LICENSE("GPL");
+

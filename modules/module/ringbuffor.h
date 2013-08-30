@@ -24,4 +24,7 @@ typedef struct {
 	char array[BUFFER_SIZE];  /* array of elements      */
 } CircularBuffer;
 
+/* must have */
+MODULE_LICENSE("GPL");
+
 #endif /* __ringbuffor_H */
