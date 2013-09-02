@@ -53,7 +53,7 @@ int check_empty_ringbuffor(CircularBuffer *cb)
 }
 
 // write single char to ring buffor
-void cbWrite(CircularBuffer *cb,  char value)
+void write_to_ringbuffor(CircularBuffer *cb,  char value)
 {
 	int end;
 	//#ifdef DEBUG
@@ -77,7 +77,7 @@ void cbWrite(CircularBuffer *cb,  char value)
 }
 
 // read single char from ring buffor
-void cbRead(CircularBuffer *cb,  char  *value)
+void read_from_ringbuffor(CircularBuffer *cb,  char  *value)
 {
     *value=cb->array[cb->start];
     cb->array[cb->start]=0;
@@ -122,7 +122,7 @@ static ssize_t my_read(struct file *filp, char __user *buffer,
 		{
 			if(!check_empty_ringbuffor(&cb)) { //if not mepty
 				//printk(KERN_INFO "[READ] is not empty\n");
-				cbRead(&cb,&ch);
+				read_from_ringbuffor(&cb,&ch);
 				//printk(KERN_INFO "dupa %d [%c]\n",ch,ch);
 				buf[i]=ch;
 			}
@@ -148,7 +148,7 @@ static ssize_t my_write(struct file *f, const char __user *buf,
 		//printk(KERN_INFO "[%d]buf = %c clen = %d\n",i+1,(char)buf[i],len);
 		if(copy_from_user(&ch, buf + i,1) == 0) /* copy from user to kernel space */
 		{
-			cbWrite(&cb,ch); // if full, overwrite!
+			write_to_ringbuffor(&cb,ch); // if full, overwrite!
 		}
 	}
 	return len;
@@ -167,7 +167,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd,
 			printk(KERN_INFO "ioctl read\n");
 			for(i=0;cb.count != 0;++i)
 			{
-				cbRead(&cb,&ch);
+				read_from_ringbuffor(&cb,&ch);
 				buf[i] = ch;
 	//			printk(KERN_INFO "[IOCTL R] %d [%c]\n",ch,ch);
 			}
@@ -185,7 +185,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd,
 			{
 				get_user(ch, temp);
 				//printk(KERN_INFO "[IOCTL W] [%d]arg = %d [%c]\n",i+1,ch,ch);
-				cbWrite(&cb,ch);
+				write_to_ringbuffor(&cb,ch);
 			}
 		break;
 	// empty?
