@@ -12,7 +12,7 @@
 
 
 /* global variable for CB */
-static CircularBuffer cb; 
+static circular_buffer cb; 
 /* Global variable for one char */
 static char ch; 
 /* Global variable for buffor */
@@ -28,7 +28,7 @@ struct semaphore sem;
 
 
 // init of ring buffor
-void init_ringbuffor(CircularBuffer *cb)
+void init_ringbuffor(circular_buffer *cb)
 {
 	int i;
 	cb->size  = BUFFER_SIZE;
@@ -41,19 +41,19 @@ void init_ringbuffor(CircularBuffer *cb)
 }
 
 // return 0 if Full
-int check_full_ringbuffor(CircularBuffer *cb) 
+int check_full_ringbuffor(circular_buffer *cb) 
 {
 	return cb->count == cb->size;
 }
 
 // return 0 if empty
-int check_empty_ringbuffor(CircularBuffer *cb) 
+int check_empty_ringbuffor(circular_buffer *cb) 
 {
 	return cb->count == 0;
 }
 
 // write single char to ring buffor
-void write_to_ringbuffor(CircularBuffer *cb,  char value)
+void write_to_ringbuffor(circular_buffer *cb,  char value)
 {
 	int end;
 	//#ifdef DEBUG
@@ -77,7 +77,7 @@ void write_to_ringbuffor(CircularBuffer *cb,  char value)
 }
 
 // read single char from ring buffor
-void read_from_ringbuffor(CircularBuffer *cb,  char  *value)
+void read_from_ringbuffor(circular_buffer *cb,  char  *value)
 {
     *value=cb->array[cb->start];
     cb->array[cb->start]=0;

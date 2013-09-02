@@ -23,25 +23,25 @@ typedef struct {
 	int start;  /* index of oldest element               */
 	int count;    /* index at which to write new element */
 	char array[BUFFER_SIZE];  /* array of elements      */
-} CircularBuffer; /* typedef */
+} circular_buffer; /* typedef */
 
 /* must have */
 MODULE_LICENSE("GPL");
 
 /* init of ring buffor */
-void init_ringbuffor(CircularBuffer *);
+void init_ringbuffor(circular_buffer *);
 
 /* return 0 if Full */
-int check_full_ringbuffor(CircularBuffer *);
+int check_full_ringbuffor(circular_buffer *);
 
 /* return 0 if empty */
-int check_empty_ringbuffor(CircularBuffer *);
+int check_empty_ringbuffor(circular_buffer *);
 
 /* write single char to ring buffor */
-void write_to_ringbuffor(CircularBuffer *, char);
+void write_to_ringbuffor(circular_buffer *, char);
 
 /* read single char from ring buffor */
-void read_from_ringbuffor(CircularBuffer *, char *);
+void read_from_ringbuffor(circular_buffer *, char *);
 
 /* open /dev/ file */
 static int my_open(struct inode *, struct file *);
