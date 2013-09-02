@@ -4,3 +4,8 @@ Userspace/
 	ioctl.c - checking ioctl
 	read.c - reading from ringbuffor by /dev/
 	write.c - writing to ringbuffor by /dev/
+
+
+TIPS&TRICKS:
+- read and write programs using Upper case in menu
+- after load module type: chmod 666 /dev/ringbuffor
