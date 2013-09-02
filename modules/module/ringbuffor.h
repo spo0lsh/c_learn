@@ -30,23 +30,18 @@ MODULE_LICENSE("GPL");
 
 /* init of ring buffor */
 void init_ringbuffor(CircularBuffer *);
-void cbInit(CircularBuffer *);
 
 /* return 0 if Full */
 int check_full_ringbuffor(CircularBuffer *);
-int cbIsFull(CircularBuffer *);
 
 /* return 0 if empty */
 int check_empty_ringbuffor(CircularBuffer *);
-int cbIsEmpty(CircularBuffer *);
 
 /* write single char to ring buffor */
 void write_to_ringbuffor(CircularBuffer *, char);
-void cbWrite(CircularBuffer *,  char );
 
 /* read single char from ring buffor */
 void read_from_ringbuffor(CircularBuffer *, char *);
-void cbRead(CircularBuffer *,  char  *);
 
 /* open /dev/ file */
 static int my_open(struct inode *, struct file *);
