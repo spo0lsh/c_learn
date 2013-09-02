@@ -28,7 +28,7 @@ struct semaphore sem;
 
 
 // init of ring buffor
-void cbInit(CircularBuffer *cb)
+void init_ringbuffor(CircularBuffer *cb)
 {
 	int i;
 	cb->size  = BUFFER_SIZE;
@@ -214,7 +214,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd,
 			break;
 	// cleanup 
 		case CLEAR_IOCTL:
-			cbInit(&cb);
+			init_ringbuffor(&cb);
 			printk(KERN_INFO "ioctl clear\n");
 			break;
 	// size
@@ -259,7 +259,7 @@ static int __init ofcd_init(void) /* Constructor */
 		unregister_chrdev_region(first, 1);
 		return -1;
 	}
-	cbInit(&cb);
+	init_ringbuffor(&cb);
   
 	return 0;
 }
