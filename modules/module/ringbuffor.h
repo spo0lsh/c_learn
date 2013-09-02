@@ -41,11 +41,11 @@ int check_empty_ringbuffor(CircularBuffer *);
 int cbIsEmpty(CircularBuffer *);
 
 /* write single char to ring buffor */
-void write_to_ringbuffor(CircularBuffer *);
+void write_to_ringbuffor(CircularBuffer *, char);
 void cbWrite(CircularBuffer *,  char );
 
 /* read single char from ring buffor */
-void read_from_ringbuffor(CircularBuffer *);
+void read_from_ringbuffor(CircularBuffer *, char *);
 void cbRead(CircularBuffer *,  char  *);
 
 /* open /dev/ file */
