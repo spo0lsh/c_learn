@@ -41,13 +41,13 @@ void init_ringbuffor(CircularBuffer *cb)
 }
 
 // return 0 if Full
-int cbIsFull(CircularBuffer *cb) 
+int check_full_ringbuffor(CircularBuffer *cb) 
 {
 	return cb->count == cb->size;
 }
 
 // return 0 if empty
-int cbIsEmpty(CircularBuffer *cb) 
+int check_empty_ringbuffor(CircularBuffer *cb) 
 {
 	return cb->count == 0;
 }
@@ -115,12 +115,12 @@ static ssize_t my_read(struct file *filp, char __user *buffer,
 {
 	int i;
 	printk(KERN_INFO "Driver: read()\n");
-	if(!cbIsEmpty(&cb)) // if not empty
+	if(!check_empty_ringbuffor(&cb)) // if not empty
 	{
 		//printk(KERN_INFO "[READ] is not empty!\n");
 		for(i=0;cb.count != 0;++i)
 		{
-			if(!cbIsEmpty(&cb)) { //if not mepty
+			if(!check_empty_ringbuffor(&cb)) { //if not mepty
 				//printk(KERN_INFO "[READ] is not empty\n");
 				cbRead(&cb,&ch);
 				//printk(KERN_INFO "dupa %d [%c]\n",ch,ch);
@@ -190,7 +190,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd,
 		break;
 	// empty?
 		case EMPTY_IOCTL:
-			if(cbIsEmpty(&cb) != 0)
+			if(check_empty_ringbuffor(&cb) != 0)
 			{
 				printk(KERN_INFO "ioctl empty\n");
 				return -1; // yes, is empty
@@ -202,7 +202,7 @@ int my_ioctl(struct inode *inode, struct file *f, unsigned int cmd,
 			break;
 	// full?
 		case FULL_IOCTL:
-			if(cbIsFull(&cb) != 0)
+			if(check_full_ringbuffor(&cb) != 0)
 			{
 				printk(KERN_INFO "ioctl full\n");
 				return -1; // yes, is full
