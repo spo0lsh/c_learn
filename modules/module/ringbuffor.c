@@ -7,6 +7,7 @@
 #include <linux/device.h>
 #include <linux/cdev.h>
 #include <asm/uaccess.h>
+#include <asm/errno.h>
 #include <linux/semaphore.h>
 #include "ringbuffor.h"
 
@@ -142,16 +143,24 @@ static ssize_t my_write(struct file *f, const char __user *buf,
 {
 	int i;
 	printk(KERN_INFO "Driver: write()\n");
+	printk(KERN_INFO "*** len = %d, count = %d free = %d\n",len,cb.count,cb.size - cb.count);
 
-    for(i=0;i<len;++i)
-    {
-		//printk(KERN_INFO "[%d]buf = %c clen = %d\n",i+1,(char)buf[i],len);
-		if(copy_from_user(&ch, buf + i,1) == 0) /* copy from user to kernel space */
+	if(len>cb.size - cb.count)
+	{
+		printk(KERN_INFO "OUT OF MEMORY!\n");
+		return -ENOMEM;
+	} else {
+		for(i=0;i<len;++i)
 		{
-			write_to_ringbuffor(&cb,ch); // if full, overwrite!
+			//printk(KERN_INFO "[%d]buf = %c clen = %d\n",i+1,(char)buf[i],len);
+			if(copy_from_user(&ch, buf + i,1) == 0) /* copy from user to kernel space */
+			{
+				write_to_ringbuffor(&cb,ch); // if full, overwrite!
+			}
 		}
+		printk(KERN_INFO "*** len = %d, count = %d free = %d\n",len,cb.count,cb.size - cb.count);
+		return len;
 	}
-	return len;
 }
 
 /* ioctl */
